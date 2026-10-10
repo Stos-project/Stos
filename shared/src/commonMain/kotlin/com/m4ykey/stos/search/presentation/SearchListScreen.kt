@@ -38,9 +38,10 @@ import com.m4ykey.stos.core.paging.PagingAppendState
 import com.m4ykey.stos.core.ui.ActionButton
 import com.m4ykey.stos.core.ui.AppScaffold
 import com.m4ykey.stos.core.ui.ErrorItem
+import com.m4ykey.stos.core.ui.FloatingActionArrowUp
 import com.m4ykey.stos.core.ui.LoadingItem
 import com.m4ykey.stos.question.presentation.components.ChipList
-import com.m4ykey.stos.question.presentation.components.QuestionItem
+import com.m4ykey.stos.question.presentation.components.QuestionListItem
 import com.m4ykey.stos.search.domain.model.SearchSort
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
@@ -79,19 +80,9 @@ fun SearchListScreen(
                 enter = slideInHorizontally { it },
                 exit = slideOutHorizontally { it }
             ) {
-                FloatingActionButton(
-                    onClick = {
-                        coroutineScope.launch {
-                            listState.animateScrollToItem(0)
-                        }
-                    },
-                    content = {
-                        Icon(
-                            contentDescription = null,
-                            painter = painterResource(Res.drawable.ic_arrow_up),
-                            modifier = Modifier.size(24.dp)
-                        )
-                    }
+                FloatingActionArrowUp(
+                    listState = listState,
+                    coroutineScope = coroutineScope
                 )
             }
         },
@@ -184,7 +175,7 @@ fun SearchListScreenContent(
                         val question = items[index]
 
                         question?.let { item ->
-                            QuestionItem(
+                            QuestionListItem(
                                 item = item,
                                 onOwnerClick = onOwnerClick,
                                 onQuestionClick = onQuestionClick

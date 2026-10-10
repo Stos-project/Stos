@@ -12,4 +12,6 @@
     <string name="relevance">Relevance</string>
     <string name="asked">Asked</string>
     <string name="link">Link</string>
+    <string name="questions">Questions</string>
+    <string name="answers">Answers</string>
 </resources>

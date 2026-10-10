@@ -12,4 +12,6 @@
     <string name="relevance">Podobne</string>
     <string name="asked">Zapytano</string>
     <string name="link">Link</string>
+    <string name="questions">Pytania</string>
+    <string name="answers">Odpowiedzi</string>
 </resources>

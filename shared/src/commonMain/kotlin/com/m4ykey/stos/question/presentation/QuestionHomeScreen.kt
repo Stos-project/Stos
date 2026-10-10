@@ -37,10 +37,11 @@ import com.m4ykey.stos.core.paging.PagingAppendState
 import com.m4ykey.stos.core.ui.ActionButton
 import com.m4ykey.stos.core.ui.AppScaffold
 import com.m4ykey.stos.core.ui.ErrorItem
+import com.m4ykey.stos.core.ui.FloatingActionArrowUp
 import com.m4ykey.stos.core.ui.LoadingItem
 import com.m4ykey.stos.question.domain.model.QuestionSort
 import com.m4ykey.stos.question.presentation.components.ChipList
-import com.m4ykey.stos.question.presentation.components.QuestionItem
+import com.m4ykey.stos.question.presentation.components.QuestionListItem
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -77,19 +78,9 @@ fun QuestionHomeScreen(
                 enter = slideInHorizontally { it },
                 exit = slideOutHorizontally { it }
             ) {
-                FloatingActionButton(
-                    onClick = {
-                        coroutineScope.launch {
-                            listState.animateScrollToItem(0)
-                        }
-                    },
-                    content = {
-                        Icon(
-                            contentDescription = null,
-                            painter = painterResource(Res.drawable.ic_arrow_up),
-                            modifier = Modifier.size(24.dp)
-                        )
-                    }
+                FloatingActionArrowUp(
+                    coroutineScope = coroutineScope,
+                    listState = listState
                 )
             }
         },
@@ -167,7 +158,7 @@ fun QuestionContent(
                         val question = items[index]
 
                         question?.let { item ->
-                            QuestionItem(
+                            QuestionListItem(
                                 onOwnerClick = onOwnerClick,
                                 onQuestionClick = onQuestionClick,
                                 item = item

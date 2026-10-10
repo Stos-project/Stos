@@ -32,7 +32,7 @@ import stos.shared.generated.resources.ic_comment
 import stos.shared.generated.resources.ic_view
 
 @Composable
-fun QuestionItem(
+fun QuestionListItem(
     modifier : Modifier = Modifier,
     item : QuestionItem,
     onQuestionClick : (Int) -> Unit,
