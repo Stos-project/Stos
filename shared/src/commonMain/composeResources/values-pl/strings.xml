@@ -14,4 +14,8 @@
     <string name="link">Link</string>
     <string name="questions">Pytania</string>
     <string name="answers">Odpowiedzi</string>
+    <string name="days">dni</string>
+    <string name="h">godz.</string>
+    <string name="min">min</string>
+    <string name="sec">sek</string>
 </resources>
