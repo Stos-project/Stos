@@ -2,6 +2,7 @@ package com.m4ykey.stos.user.network.service
 
 import com.m4ykey.stos.core.Items
 import com.m4ykey.stos.question.network.model.QuestionItemDto
+import com.m4ykey.stos.user.network.model.AnswerItemDto
 import com.m4ykey.stos.user.network.model.OwnerDto
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -37,6 +38,28 @@ class UserService(private val client : HttpClient) : RemoteUserService {
         return client.get {
             url {
                 appendPathSegments("users/$id/questions")
+                parameter("site", site)
+                parameter("order", order)
+                parameter("sort", sort)
+                parameter("page", page)
+                parameter("page_size", pageSize)
+                parameter("filter", filter)
+            }
+        }.body()
+    }
+
+    override suspend fun getUserAnswers(
+        site: String,
+        id: Int,
+        order: String,
+        sort: String,
+        page: Int,
+        pageSize: Int,
+        filter: String
+    ) : Items<AnswerItemDto> {
+        return client.get {
+            url {
+                appendPathSegments("users/$id/answers")
                 parameter("site", site)
                 parameter("order", order)
                 parameter("sort", sort)

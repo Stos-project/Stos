@@ -6,8 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import androidx.paging.map
 import com.m4ykey.stos.core.network.ApiResult
-import com.m4ykey.stos.question.domain.model.QuestionItem
+import com.m4ykey.stos.user.domain.model.UserProfileItem
 import com.m4ykey.stos.user.domain.model.UserProfileItems
 import com.m4ykey.stos.user.domain.repository.UserRepository
 import com.m4ykey.stos.user.presentation.state.UserSortState
@@ -81,7 +82,7 @@ class UserViewModel(
         }
     }
 
-    val userQuestionItems : Flow<PagingData<QuestionItem>> =
+    val userQuestionItems : Flow<PagingData<UserProfileItem>> =
         combine(
             _userId,
             userSortState.map { it.sort }.distinctUntilChanged()
@@ -89,13 +90,23 @@ class UserViewModel(
             userId to sort
         }.flatMapLatest { (userId, sort) ->
             when {
-                userId == null -> emptyFlow()
-
-                sort == UserProfileItems.QUESTIONS -> {
-                    repository.getUserQuestions(userId)
+                userId == null -> {
+                    emptyFlow<PagingData<UserProfileItem>>()
                 }
 
-                else -> emptyFlow()
+                sort == UserProfileItems.QUESTIONS ->
+                    repository.getUserQuestions(userId).map { pagingData ->
+                        pagingData.map { question ->
+                            UserProfileItem.Question(question) as UserProfileItem
+                        }
+                    }
+
+                else ->
+                    repository.getUserAnswers(userId).map { pagingData ->
+                        pagingData.map { answer ->
+                            UserProfileItem.Answer(answer) as UserProfileItem
+                        }
+                    }
             }
         }.cachedIn(viewModelScope)
 

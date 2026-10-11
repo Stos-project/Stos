@@ -36,7 +36,7 @@ fun QuestionListItem(
     modifier : Modifier = Modifier,
     item : QuestionItem,
     onQuestionClick : (Int) -> Unit,
-    onOwnerClick : (Int) -> Unit
+    onOwnerClick : (Int) -> Unit= {}
 ) {
     Column(
         modifier = Modifier

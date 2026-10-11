@@ -29,10 +29,11 @@ import com.m4ykey.stos.core.ui.AppScaffold
 import com.m4ykey.stos.core.ui.ErrorItem
 import com.m4ykey.stos.core.ui.FloatingActionArrowUp
 import com.m4ykey.stos.core.ui.LoadingItem
-import com.m4ykey.stos.question.domain.model.QuestionItem
 import com.m4ykey.stos.question.presentation.components.ChipList
 import com.m4ykey.stos.question.presentation.components.QuestionListItem
+import com.m4ykey.stos.user.domain.model.UserProfileItem
 import com.m4ykey.stos.user.domain.model.UserProfileItems
+import com.m4ykey.stos.user.presentation.components.AnswerListItem
 import com.m4ykey.stos.user.presentation.components.UserProfile
 import com.m4ykey.stos.user.presentation.state.UserState
 import org.koin.compose.viewmodel.koinViewModel
@@ -53,7 +54,7 @@ fun UserScreen(
     val listState = rememberLazyListState()
 
     val state by viewModel.userState.collectAsStateWithLifecycle()
-    val questionState = viewModel.userQuestionItems.collectAsLazyPagingItems()
+    val userProfileItem = viewModel.userQuestionItems.collectAsLazyPagingItems()
     val viewState by viewModel.userSortState.collectAsStateWithLifecycle()
 
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
@@ -92,7 +93,7 @@ fun UserScreen(
                 onRetry = { viewModel.onRetryUserState(userId) },
                 sort = viewState.sort,
                 onSortChange = viewModel::updateSort,
-                questionState = questionState,
+                userProfileItem = userProfileItem,
                 onQuestionClick = onQuestionClick
             )
         },
@@ -124,7 +125,7 @@ fun UserScreenContent(
     listState : LazyListState,
     onRetry : () -> Unit,
     sort : UserProfileItems,
-    questionState : LazyPagingItems<QuestionItem>,
+    userProfileItem : LazyPagingItems<UserProfileItem>,
     onSortChange : (UserProfileItems) -> Unit,
     onQuestionClick : (Int) -> Unit
 ) {
@@ -163,21 +164,35 @@ fun UserScreenContent(
                         }
                     }
                     items(
-                        key = { index -> questionState[index]?.questionId ?: index },
-                        count = questionState.itemCount
+                        key = { index ->
+                            when (val item = userProfileItem[index]) {
+                                is UserProfileItem.Answer -> item.item.answerId
+                                is UserProfileItem.Question -> item.item.questionId
+                                null -> index
+                            }
+                        },
+                        count = userProfileItem.itemCount
                     ) { index ->
-                        val question = questionState[index]
+                        when (val item = userProfileItem[index]) {
+                            is UserProfileItem.Question -> {
+                                QuestionListItem(
+                                    onQuestionClick = onQuestionClick,
+                                    item = item.item
+                                )
+                            }
 
-                        if (question != null) {
-                            QuestionListItem(
-                                onOwnerClick = {},
-                                onQuestionClick = onQuestionClick,
-                                item = question
-                            )
+                            is UserProfileItem.Answer -> {
+                                AnswerListItem(
+                                    onQuestionClick = onQuestionClick,
+                                    item = item.item
+                                )
+                            }
+
+                            else -> Unit
                         }
                     }
 
-                    if (questionState.loadState.append is LoadState.Loading) {
+                    if (userProfileItem.loadState.append is LoadState.Loading) {
                         item {
                             LoadingItem()
                         }

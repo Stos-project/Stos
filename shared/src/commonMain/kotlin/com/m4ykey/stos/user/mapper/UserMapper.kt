@@ -2,7 +2,9 @@ package com.m4ykey.stos.user.mapper
 
 import com.m4ykey.stos.question.domain.model.BadgeCounts
 import com.m4ykey.stos.question.network.model.BadgeCountsDto
+import com.m4ykey.stos.user.domain.model.AnswerItem
 import com.m4ykey.stos.user.domain.model.Owner
+import com.m4ykey.stos.user.network.model.AnswerItemDto
 import com.m4ykey.stos.user.network.model.OwnerDto
 
 fun BadgeCountsDto.toBadgeCounts() : BadgeCounts {
@@ -21,5 +23,15 @@ fun OwnerDto.toOwner() : Owner {
         reputation = reputation ?: 0,
         userId = userId ?: 0,
         badgeCounts = badgeCounts?.toBadgeCounts() ?: BadgeCounts.EMPTY
+    )
+}
+
+fun AnswerItemDto.toAnswerItem() : AnswerItem {
+    return AnswerItem(
+        answerId = answerId ?: 0,
+        creationDate = creationDate ?: 0,
+        owner = owner?.toOwner() ?: Owner.EMPTY,
+        questionId = questionId ?: 0,
+        title = title.orEmpty()
     )
 }
