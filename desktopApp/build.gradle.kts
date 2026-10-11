@@ -22,6 +22,8 @@ dependencies {
     implementation(libs.kotlinx.coroutinesSwing)
 
     implementation(libs.compose.uiToolingPreview)
+
+    implementation(libs.slf4j)
 }
 
 compose.desktop {

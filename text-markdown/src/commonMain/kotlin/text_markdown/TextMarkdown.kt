@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -51,27 +52,29 @@ fun TextMarkdown(
 
     val markdownState = rememberMarkdownState(
         content = processedText,
-        retainState = true
+        retainState = false
     )
 
-    val highlightsBuilder = remember(isDarkTheme) {
-        Highlights.Builder().theme(SyntaxThemes.atom(darkMode = isDarkTheme))
-    }
-
-    val customComponents = remember(highlightsBuilder) {
+    val customComponents = remember(isDarkTheme) {
         markdownComponents(
             codeBlock = {
+                val builder = remember (isDarkTheme) {
+                    Highlights.Builder().theme(SyntaxThemes.atom(darkMode = isDarkTheme))
+                }
                 MarkdownHighlightedCodeBlock(
                     content = it.content,
                     node = it.node,
-                    highlightsBuilder = highlightsBuilder
+                    highlightsBuilder = builder
                 )
             },
             codeFence = {
+                val builder = remember (isDarkTheme) {
+                    Highlights.Builder().theme(SyntaxThemes.atom(darkMode = isDarkTheme))
+                }
                 MarkdownHighlightedCodeFence(
                     content = it.content,
                     node = it.node,
-                    highlightsBuilder = highlightsBuilder
+                    highlightsBuilder = builder
                 )
             }
         )
@@ -115,5 +118,4 @@ fun TextMarkdown(
             )
         }
     }
-
 }
