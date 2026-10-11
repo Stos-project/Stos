@@ -25,6 +25,7 @@ buildkonfig = "0.23.0"
 markdown = "0.45.0"
 ksoup = "0.6.0"
 browser = "1.10.0"
+slf4j = "2.0.20"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -79,6 +80,8 @@ markdown-renderer-code = { module = "com.mikepenz:multiplatform-markdown-rendere
 
 ksoup = { module = "com.mohamedrejeb.ksoup:ksoup-html", version.ref = "ksoup" }
 ksoup-entities = { module = "com.mohamedrejeb.ksoup:ksoup-entities", version.ref = "ksoup" }
+
+slf4j = { module = "org.slf4j:slf4j-simple", version.ref = "slf4j" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
