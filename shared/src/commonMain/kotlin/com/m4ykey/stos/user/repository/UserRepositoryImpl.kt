@@ -1,10 +1,17 @@
 package com.m4ykey.stos.user.repository
 
+import androidx.paging.Pager
+import androidx.paging.PagingData
 import com.m4ykey.stos.core.network.ApiResult
 import com.m4ykey.stos.core.network.safeApi
+import com.m4ykey.stos.core.paging.pagingConfig
+import com.m4ykey.stos.question.domain.model.QuestionItem
+import com.m4ykey.stos.user.domain.model.AnswerItem
 import com.m4ykey.stos.user.domain.model.Owner
 import com.m4ykey.stos.user.domain.repository.UserRepository
 import com.m4ykey.stos.user.mapper.toOwner
+import com.m4ykey.stos.user.network.paging.UserAnswerPagingSource
+import com.m4ykey.stos.user.network.paging.UserQuestionPagingSource
 import com.m4ykey.stos.user.network.service.UserService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -31,5 +38,23 @@ class UserRepositoryImpl(
                 }
             }
         }.flowOn(Dispatchers.IO)
+    }
+
+    override fun getUserQuestions(userId: Int): Flow<PagingData<QuestionItem>> {
+        return Pager(
+            config = pagingConfig,
+            pagingSourceFactory = {
+                UserQuestionPagingSource(service, userId)
+            }
+        ).flow
+    }
+
+    override fun getUserAnswers(userId: Int): Flow<PagingData<AnswerItem>> {
+        return Pager(
+            config = pagingConfig,
+            pagingSourceFactory = {
+                UserAnswerPagingSource(service, userId)
+            }
+        ).flow
     }
 }

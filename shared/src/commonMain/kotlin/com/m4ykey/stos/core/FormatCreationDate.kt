@@ -1,8 +1,16 @@
 package com.m4ykey.stos.core
 
+import androidx.compose.runtime.Composable
+import org.jetbrains.compose.resources.stringResource
+import stos.shared.generated.resources.Res
+import stos.shared.generated.resources.days
+import stos.shared.generated.resources.h
+import stos.shared.generated.resources.min
+import stos.shared.generated.resources.sec
 import kotlin.time.Clock
 import kotlin.time.Instant
 
+@Composable
 fun formatCreationDate(date : Long) : String {
     val now = Clock.System.now()
     val creationDate = Instant.fromEpochSeconds(date)
@@ -14,9 +22,9 @@ fun formatCreationDate(date : Long) : String {
     val seconds = difference.inWholeSeconds % 60
 
     return when {
-        days > 0 -> "$days days"
-        hours > 0 -> "$hours h."
-        minutes > 0 -> "$minutes min"
-        else -> "$seconds sec."
+        days > 0 -> "$days ${stringResource(Res.string.days)}"
+        hours > 0 -> "$hours ${stringResource(Res.string.h)}"
+        minutes > 0 -> "$minutes ${stringResource(Res.string.min)}"
+        else -> "$seconds ${stringResource(Res.string.sec)}"
     }
 }

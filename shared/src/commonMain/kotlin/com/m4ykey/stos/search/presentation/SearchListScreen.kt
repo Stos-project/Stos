@@ -12,12 +12,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -38,17 +35,15 @@ import com.m4ykey.stos.core.paging.PagingAppendState
 import com.m4ykey.stos.core.ui.ActionButton
 import com.m4ykey.stos.core.ui.AppScaffold
 import com.m4ykey.stos.core.ui.ErrorItem
+import com.m4ykey.stos.core.ui.FloatingActionArrowUp
 import com.m4ykey.stos.core.ui.LoadingItem
 import com.m4ykey.stos.question.presentation.components.ChipList
-import com.m4ykey.stos.question.presentation.components.QuestionItem
+import com.m4ykey.stos.question.presentation.components.QuestionListItem
 import com.m4ykey.stos.search.domain.model.SearchSort
-import kotlinx.coroutines.launch
-import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 import stos.shared.generated.resources.Res
 import stos.shared.generated.resources.back
 import stos.shared.generated.resources.ic_arrow_back
-import stos.shared.generated.resources.ic_arrow_up
 
 @Composable
 fun SearchListScreen(
@@ -79,19 +74,9 @@ fun SearchListScreen(
                 enter = slideInHorizontally { it },
                 exit = slideOutHorizontally { it }
             ) {
-                FloatingActionButton(
-                    onClick = {
-                        coroutineScope.launch {
-                            listState.animateScrollToItem(0)
-                        }
-                    },
-                    content = {
-                        Icon(
-                            contentDescription = null,
-                            painter = painterResource(Res.drawable.ic_arrow_up),
-                            modifier = Modifier.size(24.dp)
-                        )
-                    }
+                FloatingActionArrowUp(
+                    listState = listState,
+                    coroutineScope = coroutineScope
                 )
             }
         },
@@ -184,7 +169,7 @@ fun SearchListScreenContent(
                         val question = items[index]
 
                         question?.let { item ->
-                            QuestionItem(
+                            QuestionListItem(
                                 item = item,
                                 onOwnerClick = onOwnerClick,
                                 onQuestionClick = onQuestionClick

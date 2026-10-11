@@ -108,7 +108,10 @@ fun AppNavigation(modifier : Modifier = Modifier) {
             entry<Route.UserScreen> { key ->
                 UserScreen(
                     userId = key.userId,
-                    onBack = ::navigateBack
+                    onBack = ::navigateBack,
+                    onQuestionClick = { item ->
+                        navigateTo(Route.QuestionDetail(item))
+                    }
                 )
             }
         }

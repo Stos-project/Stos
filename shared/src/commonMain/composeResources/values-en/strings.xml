@@ -12,4 +12,10 @@
     <string name="relevance">Relevance</string>
     <string name="asked">Asked</string>
     <string name="link">Link</string>
+    <string name="questions">Questions</string>
+    <string name="answers">Answers</string>
+    <string name="days">days</string>
+    <string name="h">h</string>
+    <string name="min">min</string>
+    <string name="sec">sec.</string>
 </resources>
