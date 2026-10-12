@@ -21,4 +21,7 @@ sealed interface Route : NavKey {
     @Serializable
     data class UserScreen(val userId : Int) : Route
 
+    @Serializable
+    data class QuestionRelated(val questionId : Int) : Route
+
 }

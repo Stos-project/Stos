@@ -19,4 +19,5 @@
     <string name="min">min</string>
     <string name="sec">sek</string>
     <string name="tags">Tagi</string>
+    <string name="related_questions">Podobne Pytania</string>
 </resources>
