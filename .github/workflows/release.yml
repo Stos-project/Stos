@@ -1,0 +1,66 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build and publish release
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Validate Gradle Wrapper
+        uses: gradle/actions/wrapper-validation@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "25"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v6
+
+      - name: Build Android APK
+        run: ./gradlew assembleDebug
+
+      - name: Build Desktop distribution
+        run: ./gradlew packageDistributionForCurrentOS
+
+      - name: Collect release artifacts
+        shell: bash
+        run: |
+          mkdir -p release-artifacts
+
+          find . -type f -path "*/build/outputs/apk/*/*.apk" \
+            -exec cp {} release-artifacts/ \;
+
+          find . -type f -path "*/build/compose/binaries/main/*" \
+            \( -name "*.deb" -o -name "*.rpm" -o -name "*.msi" -o -name "*.dmg" -o -name "*.exe" -o -name "*.pkg" \) \
+            -exec cp {} release-artifacts/ \;
+
+          if [ -z "$(ls -A release-artifacts)" ]; then
+            echo "No release artifacts found."
+            exit 1
+          fi
+
+          ls -lh release-artifacts
+
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG_NAME: ${{ github.ref_name }}
+        run: |
+          gh release create "$TAG_NAME" release-artifacts/* \
+            --title "$TAG_NAME" \
+            --generate-notes
