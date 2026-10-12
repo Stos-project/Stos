@@ -102,7 +102,10 @@ fun AppNavigation(modifier : Modifier = Modifier) {
             entry<Route.QuestionDetail> { key ->
                 QuestionDetailScreen(
                     onBack = ::navigateBack,
-                    questionId = key.questionId
+                    questionId = key.questionId,
+                    onRelatedQuestions = { questionId ->
+                        navigateTo(Route.QuestionRelated(questionId))
+                    }
                 )
             }
             entry<Route.UserScreen> { key ->
@@ -113,6 +116,9 @@ fun AppNavigation(modifier : Modifier = Modifier) {
                         navigateTo(Route.QuestionDetail(item))
                     }
                 )
+            }
+            entry<Route.QuestionRelated> {
+
             }
         }
     )
