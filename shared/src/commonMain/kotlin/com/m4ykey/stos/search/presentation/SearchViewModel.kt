@@ -8,6 +8,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.m4ykey.stos.question.domain.model.QuestionItem
 import com.m4ykey.stos.search.domain.model.SearchSort
+import com.m4ykey.stos.search.domain.model.TagsItem
 import com.m4ykey.stos.search.domain.repository.SearchRepository
 import com.m4ykey.stos.search.presentation.state.SearchQuestionState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -20,6 +21,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class SearchViewModel(
     private val repository : SearchRepository
@@ -27,6 +29,10 @@ class SearchViewModel(
 
     private val _searchState = MutableStateFlow(SearchQuestionState())
     val searchState = _searchState.asStateFlow()
+
+    val tagFlow : Flow<PagingData<TagsItem>> =
+        repository.getSearchTags()
+            .cachedIn(viewModelScope)
 
     private val searchFlow : Flow<PagingData<QuestionItem>> = _searchState
         .debounce { state -> if (state.inTitle.isNullOrBlank()) 0L else 300L }
