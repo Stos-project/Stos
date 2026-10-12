@@ -18,5 +18,6 @@ data class QuestionDetailDto(
     @SerialName("view_count") val viewCount : Int? = null,
     @SerialName("comment_count") val commentCount : Int? = null,
     val owner : OwnerDto? = null,
-    val tags: List<String>? = emptyList()
+    val tags: List<String>? = emptyList(),
+    @SerialName("last_editor") val lastEditor : OwnerDto? = null
 )

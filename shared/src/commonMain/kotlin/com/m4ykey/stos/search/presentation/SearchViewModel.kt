@@ -21,7 +21,6 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 
 class SearchViewModel(
     private val repository : SearchRepository

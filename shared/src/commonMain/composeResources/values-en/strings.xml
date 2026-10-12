@@ -20,4 +20,6 @@
     <string name="sec">sec.</string>
     <string name="tags">Tags</string>
     <string name="related_questions">Related Questions</string>
+    <string name="last_editor">Last edited by</string>
+    <string name="no_answers">No Answers</string>
 </resources>

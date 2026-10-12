@@ -1,7 +1,9 @@
 package com.m4ykey.stos.question.mapper
 
+import com.m4ykey.stos.question.domain.model.QuestionAnswer
 import com.m4ykey.stos.question.domain.model.QuestionDetail
 import com.m4ykey.stos.question.domain.model.QuestionItem
+import com.m4ykey.stos.question.network.model.QuestionAnswerDto
 import com.m4ykey.stos.question.network.model.QuestionDetailDto
 import com.m4ykey.stos.question.network.model.QuestionItemDto
 import com.m4ykey.stos.user.domain.model.Owner
@@ -21,7 +23,8 @@ fun QuestionDetailDto.toQuestionDetail() : QuestionDetail {
         creationDate = creationDate ?: 0,
         lastActivityDate = lastActivityDate ?: 0,
         owner = owner?.toOwner() ?: Owner.EMPTY,
-        tags = tags ?: emptyList()
+        tags = tags ?: emptyList(),
+        lastEditor = lastEditor?.toOwner()
     )
 }
 
@@ -37,6 +40,19 @@ fun QuestionItemDto.toQuestionItem() : QuestionItem {
         closedDate = closedDate ?: 0,
         closedReason = closedReason.orEmpty(),
         answerCount = answerCount ?: 0,
+        owner = owner?.toOwner() ?: Owner.EMPTY
+    )
+}
+
+fun QuestionAnswerDto.toQuestionAnswer() : QuestionAnswer {
+    return QuestionAnswer(
+        upVoteCount = upVoteCount ?: 0,
+        downVoteCount = downVoteCount ?: 0,
+        answerId = answerId ?: 0,
+        commentCount = commentCount ?: 0,
+        creationDate = creationDate ?: 0,
+        isAccepted = isAccepted,
+        bodyMarkdown = bodyMarkdown.orEmpty(),
         owner = owner?.toOwner() ?: Owner.EMPTY
     )
 }

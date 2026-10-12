@@ -105,6 +105,9 @@ fun AppNavigation(modifier : Modifier = Modifier) {
                     questionId = key.questionId,
                     onRelatedQuestions = { questionId ->
                         navigateTo(Route.QuestionRelated(questionId))
+                    },
+                    onUserClick = { userId ->
+                        navigateTo(Route.UserScreen(userId))
                     }
                 )
             }
