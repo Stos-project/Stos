@@ -2,10 +2,12 @@ package com.m4ykey.stos.search.domain.repository
 
 import androidx.paging.PagingData
 import com.m4ykey.stos.question.domain.model.QuestionItem
+import com.m4ykey.stos.search.domain.model.TagsItem
 import kotlinx.coroutines.flow.Flow
 
 interface SearchRepository {
 
     fun searchQuestions(inTitle : String, sort : String) : Flow<PagingData<QuestionItem>>
+    fun getSearchTags() : Flow<PagingData<TagsItem>>
 
 }
