@@ -67,26 +67,42 @@ fun QuestionListItem(
             alignment = Alignment.TopStart,
             text = item.title
         )
-        Row(
-            modifier = modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(15.dp)
-        ) {
-            QuestionInfoItem(
-                text = getVoteCount(isDownVote = item.downVoteCount > 1, item.downVoteCount, item.upVoteCount).toInt(),
-                icon = getArrowPosition(item.downVoteCount > 1)
-            )
-            QuestionInfoItem(
-                text = item.answerCount,
-                icon = painterResource(Res.drawable.ic_comment)
-            )
-            QuestionInfoItem(
-                text = item.viewCount,
-                icon = painterResource(Res.drawable.ic_view)
-            )
-        }
+        QuestionInfoRow(
+            downVoteCount = item.downVoteCount,
+            upVoteCount = item.upVoteCount,
+            answerCount = item.answerCount,
+            viewCount = item.viewCount
+        )
         Text(
             text = formatCreationDate(item.creationDate.toLong()),
             fontSize = 13.sp
+        )
+    }
+}
+
+@Composable
+fun QuestionInfoRow(
+    modifier : Modifier = Modifier,
+    downVoteCount: Int,
+    upVoteCount: Int,
+    answerCount : Int,
+    viewCount : Int
+) {
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(15.dp)
+    ) {
+        QuestionInfoItem(
+            text = getVoteCount(isDownVote = downVoteCount > 1, downVoteCount, upVoteCount).toInt(),
+            icon = getArrowPosition(downVoteCount > 1)
+        )
+        QuestionInfoItem(
+            text = answerCount,
+            icon = painterResource(Res.drawable.ic_comment)
+        )
+        QuestionInfoItem(
+            text = viewCount,
+            icon = painterResource(Res.drawable.ic_view)
         )
     }
 }
