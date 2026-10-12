@@ -4,8 +4,10 @@ import androidx.paging.Pager
 import androidx.paging.PagingData
 import com.m4ykey.stos.core.paging.pagingConfig
 import com.m4ykey.stos.question.domain.model.QuestionItem
+import com.m4ykey.stos.search.domain.model.TagsItem
 import com.m4ykey.stos.search.domain.repository.SearchRepository
 import com.m4ykey.stos.search.network.paging.SearchPagingSource
+import com.m4ykey.stos.search.network.paging.SearchPagingTags
 import com.m4ykey.stos.search.network.service.RemoteSearchService
 import kotlinx.coroutines.flow.Flow
 
@@ -19,6 +21,15 @@ class SearchRepositoryImpl(
             pagingSourceFactory = {
                 SearchPagingSource(service, inTitle, sort)
             }
+        ).flow
+    }
+
+    override fun getSearchTags(): Flow<PagingData<TagsItem>> {
+        return Pager(
+            pagingSourceFactory = {
+                SearchPagingTags(service)
+            },
+            config = pagingConfig
         ).flow
     }
 }

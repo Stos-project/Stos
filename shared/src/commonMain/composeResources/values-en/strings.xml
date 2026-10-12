@@ -18,4 +18,5 @@
     <string name="h">h</string>
     <string name="min">min</string>
     <string name="sec">sec.</string>
+    <string name="tags">Tags</string>
 </resources>
