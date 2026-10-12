@@ -20,4 +20,6 @@
     <string name="sec">sek</string>
     <string name="tags">Tagi</string>
     <string name="related_questions">Podobne Pytania</string>
+    <string name="last_editor">Ostatnio edytowane przez</string>
+    <string name="no_answers">Brak odpowiedzi</string>
 </resources>

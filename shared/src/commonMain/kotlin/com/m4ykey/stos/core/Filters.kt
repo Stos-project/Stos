@@ -6,4 +6,5 @@ object Filters {
     const val USER_FILTER = "!N6lP84MuPy)29xJ*zz.pLDDFvmA5sHHi"
     const val USER_ANSWER_FILTER = "!-R-vaz)efjzDlf6(t7mzhzDZMqnn)5svVfTB"
     const val TAGS_FILTER = "!T.BkwD1MdX1ckbtE(8"
+    const val QUESTION_ANSWER_FILTER = "!5CGw3jYJ3ArsC0-tfLZrC(vjETeYh1SlURC)3p(cU"
 }

@@ -5,10 +5,12 @@ import androidx.paging.PagingData
 import com.m4ykey.stos.core.network.ApiResult
 import com.m4ykey.stos.core.network.safeApi
 import com.m4ykey.stos.core.paging.pagingConfig
+import com.m4ykey.stos.question.domain.model.QuestionAnswer
 import com.m4ykey.stos.question.domain.model.QuestionDetail
 import com.m4ykey.stos.question.domain.model.QuestionItem
 import com.m4ykey.stos.question.domain.repository.QuestionRepository
 import com.m4ykey.stos.question.mapper.toQuestionDetail
+import com.m4ykey.stos.question.network.paging.QuestionAnswerPagingSource
 import com.m4ykey.stos.question.network.paging.QuestionPagingSource
 import com.m4ykey.stos.question.network.service.RemoteQuestionService
 import kotlinx.coroutines.Dispatchers
@@ -45,5 +47,14 @@ class QuestionRepositoryImpl(
                 }
             }
         }.flowOn(Dispatchers.IO)
+    }
+
+    override fun getQuestionAnswers(questionId: Int): Flow<PagingData<QuestionAnswer>> {
+        return Pager(
+            config = pagingConfig,
+            pagingSourceFactory = {
+                QuestionAnswerPagingSource(service = service, id = questionId)
+            }
+        ).flow
     }
 }

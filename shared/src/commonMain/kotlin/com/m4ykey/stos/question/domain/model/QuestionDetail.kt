@@ -15,5 +15,6 @@ data class QuestionDetail(
     val viewCount : Int,
     val commentCount : Int,
     val owner : Owner,
-    val tags : List<String>
+    val tags : List<String>,
+    val lastEditor : Owner? = null
 )

@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.m4ykey.stos.core.network.ApiResult
+import com.m4ykey.stos.question.domain.model.QuestionAnswer
 import com.m4ykey.stos.question.domain.model.QuestionItem
 import com.m4ykey.stos.question.domain.model.QuestionSort
 import com.m4ykey.stos.question.domain.repository.QuestionRepository
@@ -33,6 +34,10 @@ class QuestionViewModel(
 
     private val _questionDetailState = MutableStateFlow(QuestionDetailState())
     val questionDetailState = _questionDetailState.asStateFlow()
+
+    fun getQuestionAnswer(id : Int) : Flow<PagingData<QuestionAnswer>> =
+        repository.getQuestionAnswers(id)
+            .cachedIn(viewModelScope)
 
     fun getQuestionDetail(questionId : Int) {
         viewModelScope.launch {
