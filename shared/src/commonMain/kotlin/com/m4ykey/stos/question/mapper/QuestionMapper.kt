@@ -7,7 +7,7 @@ import com.m4ykey.stos.question.network.model.QuestionAnswerDto
 import com.m4ykey.stos.question.network.model.QuestionDetailDto
 import com.m4ykey.stos.question.network.model.QuestionItemDto
 import com.m4ykey.stos.user.domain.model.Owner
-import com.m4ykey.stos.user.mapper.toOwner
+import com.m4ykey.stos.user.data.mapper.toOwner
 
 fun QuestionDetailDto.toQuestionDetail() : QuestionDetail {
     return QuestionDetail(

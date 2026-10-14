@@ -1,4 +1,4 @@
-package com.m4ykey.stos.user.network.service
+package com.m4ykey.stos.user.data.remote.service
 
 import com.m4ykey.stos.core.Filters.QUESTION_HOME_FILTER
 import com.m4ykey.stos.core.Filters.USER_ANSWER_FILTER
@@ -6,8 +6,8 @@ import com.m4ykey.stos.core.Filters.USER_FILTER
 import com.m4ykey.stos.core.Items
 import com.m4ykey.stos.question.domain.model.QuestionSort
 import com.m4ykey.stos.question.network.model.QuestionItemDto
-import com.m4ykey.stos.user.network.model.AnswerItemDto
-import com.m4ykey.stos.user.network.model.OwnerDto
+import com.m4ykey.stos.user.data.remote.model.AnswerItemDto
+import com.m4ykey.stos.user.data.remote.model.OwnerDto
 
 interface RemoteUserService {
 
