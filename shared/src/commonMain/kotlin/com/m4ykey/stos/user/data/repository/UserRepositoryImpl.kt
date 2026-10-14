@@ -12,6 +12,7 @@ import com.m4ykey.stos.user.domain.repository.UserRepository
 import com.m4ykey.stos.user.data.mapper.toOwner
 import com.m4ykey.stos.user.data.remote.paging.UserAnswerPagingSource
 import com.m4ykey.stos.user.data.remote.paging.UserQuestionPagingSource
+import com.m4ykey.stos.user.data.remote.service.RemoteUserService
 import com.m4ykey.stos.user.data.remote.service.UserService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -19,7 +20,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
 class UserRepositoryImpl(
-    private val service: UserService
+    private val service: RemoteUserService
 ) : UserRepository {
 
     override suspend fun getUserById(userId: Int): Flow<ApiResult<Owner>> {
