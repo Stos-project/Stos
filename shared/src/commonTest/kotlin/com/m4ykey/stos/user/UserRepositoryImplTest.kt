@@ -16,7 +16,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertIs
 import kotlin.test.assertTrue
 
-class UserRepositoryTest {
+class UserRepositoryImplTest {
 
     private val userDto = OwnerDto(
         displayName = "Test User",

@@ -17,10 +17,40 @@ class FakeUserRepository : UserRepository {
 
     var answersFlow : Flow<PagingData<AnswerItem>> = flowOf(PagingData.empty())
 
-    override suspend fun getUserById(userId: Int): Flow<ApiResult<Owner>> = userResult
+    var getUserByIdCalls = 0
+        private set
 
-    override fun getUserQuestions(userId: Int): Flow<PagingData<QuestionItem>> = questionFlow
+    var lastUserId : Int? = null
+        private set
 
-    override fun getUserAnswers(userId: Int): Flow<PagingData<AnswerItem>> = answersFlow
+    var getUserQuestionsCalls = 0
+        private set
+
+    var lastQuestionUserId : Int? = null
+        private set
+
+    var getUserAnswersCalls = 0
+        private set
+
+    var lastAnswersUserId : Int? = null
+        private set
+
+    override suspend fun getUserById(userId: Int): Flow<ApiResult<Owner>> {
+        getUserByIdCalls++
+        lastUserId = userId
+        return userResult
+    }
+
+    override fun getUserQuestions(userId: Int): Flow<PagingData<QuestionItem>> {
+        getUserQuestionsCalls++
+        lastQuestionUserId = userId
+        return questionFlow
+    }
+
+    override fun getUserAnswers(userId: Int): Flow<PagingData<AnswerItem>> {
+        getUserAnswersCalls++
+        lastAnswersUserId = userId
+        return answersFlow
+    }
 
 }
