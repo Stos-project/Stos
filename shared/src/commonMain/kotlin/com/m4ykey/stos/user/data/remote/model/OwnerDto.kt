@@ -1,4 +1,4 @@
-package com.m4ykey.stos.user.network.model
+package com.m4ykey.stos.user.data.remote.model
 
 import com.m4ykey.stos.question.network.model.BadgeCountsDto
 import kotlinx.serialization.SerialName

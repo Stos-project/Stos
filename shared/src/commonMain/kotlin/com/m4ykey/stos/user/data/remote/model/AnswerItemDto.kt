@@ -1,4 +1,4 @@
-package com.m4ykey.stos.user.network.model
+package com.m4ykey.stos.user.data.remote.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

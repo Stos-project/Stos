@@ -1,9 +1,9 @@
-package com.m4ykey.stos.user.network.service
+package com.m4ykey.stos.user.data.remote.service
 
 import com.m4ykey.stos.core.Items
 import com.m4ykey.stos.question.network.model.QuestionItemDto
-import com.m4ykey.stos.user.network.model.AnswerItemDto
-import com.m4ykey.stos.user.network.model.OwnerDto
+import com.m4ykey.stos.user.data.remote.model.AnswerItemDto
+import com.m4ykey.stos.user.data.remote.model.OwnerDto
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get

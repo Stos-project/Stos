@@ -91,7 +91,7 @@ class UserViewModel(
         }.flatMapLatest { (userId, sort) ->
             when {
                 userId == null -> {
-                    emptyFlow<PagingData<UserProfileItem>>()
+                    emptyFlow()
                 }
 
                 sort == UserProfileItems.QUESTIONS ->

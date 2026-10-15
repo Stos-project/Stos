@@ -1,6 +1,6 @@
 package com.m4ykey.stos.question.network.model
 
-import com.m4ykey.stos.user.network.model.OwnerDto
+import com.m4ykey.stos.user.data.remote.model.OwnerDto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
