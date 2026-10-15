@@ -46,6 +46,7 @@ kotlin {
             implementation(libs.compose.uiTooling)
             implementation(libs.ktor.client.okhttp)
             implementation(libs.androidx.browser)
+            implementation(libs.androidx.paging.runtime)
         }
         commonMain.dependencies {
             implementation(project(":text-markdown"))

@@ -224,7 +224,7 @@ fun QuestionDetailContent(
                     } else {
                         items(
                             count = answers.itemCount,
-                            key = { answers.itemKey { it.answerId } }
+                            key = answers.itemKey { it.answerId }
                         ) { index ->
                             val answer = answers[index]
 

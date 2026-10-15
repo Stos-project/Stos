@@ -2,6 +2,7 @@ package com.m4ykey.stos.question.network.service
 
 import com.m4ykey.stos.core.Items
 import com.m4ykey.stos.question.domain.model.QuestionSort
+import com.m4ykey.stos.question.domain.model.RelatedQuestionSort
 import com.m4ykey.stos.question.network.model.QuestionAnswerDto
 import com.m4ykey.stos.question.network.model.QuestionDetailDto
 import com.m4ykey.stos.question.network.model.QuestionItemDto
@@ -60,6 +61,28 @@ class QuestionService(private val client : HttpClient) : RemoteQuestionService {
         return client.get {
             url {
                 appendPathSegments("questions/$id/answers")
+                parameter("site", site)
+                parameter("page", page)
+                parameter("page_size", pageSize)
+                parameter("order", order)
+                parameter("sort", sort)
+                parameter("filter", filter)
+            }
+        }.body()
+    }
+
+    override suspend fun getQuestionRelated(
+        id: Int,
+        page: Int,
+        pageSize: Int,
+        order: String,
+        sort: RelatedQuestionSort,
+        site: String,
+        filter: String
+    ): Items<QuestionItemDto> {
+        return client.get {
+            url{
+                appendPathSegments("questions/$id/related")
                 parameter("site", site)
                 parameter("page", page)
                 parameter("page_size", pageSize)

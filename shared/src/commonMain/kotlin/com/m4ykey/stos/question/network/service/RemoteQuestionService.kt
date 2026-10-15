@@ -5,6 +5,7 @@ import com.m4ykey.stos.core.Filters.QUESTION_DETAIL_FILTER
 import com.m4ykey.stos.core.Filters.QUESTION_HOME_FILTER
 import com.m4ykey.stos.core.Items
 import com.m4ykey.stos.question.domain.model.QuestionSort
+import com.m4ykey.stos.question.domain.model.RelatedQuestionSort
 import com.m4ykey.stos.question.network.model.QuestionAnswerDto
 import com.m4ykey.stos.question.network.model.QuestionDetailDto
 import com.m4ykey.stos.question.network.model.QuestionItemDto
@@ -35,5 +36,15 @@ interface RemoteQuestionService {
         sort : QuestionSort = QuestionSort.ACTIVITY,
         filter : String = QUESTION_ANSWER_FILTER
     ) : Items<QuestionAnswerDto>
+
+    suspend fun getQuestionRelated(
+        id : Int,
+        page : Int,
+        pageSize : Int,
+        order : String = "desc",
+        sort : RelatedQuestionSort = RelatedQuestionSort.ACTIVITY,
+        site : String = "stackoverflow",
+        filter : String = QUESTION_HOME_FILTER
+    ) : Items<QuestionItemDto>
 
 }

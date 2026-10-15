@@ -14,11 +14,13 @@ import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
 import com.m4ykey.stos.question.presentation.QuestionDetailScreen
 import com.m4ykey.stos.question.presentation.QuestionHomeScreen
+import com.m4ykey.stos.question.presentation.QuestionRelatedScreen
 import com.m4ykey.stos.search.presentation.SearchListScreen
 import com.m4ykey.stos.search.presentation.SearchScreen
 import com.m4ykey.stos.user.presentation.UserScreen
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
+import kotlinx.serialization.modules.subclass
 
 @Composable
 fun AppNavigation(modifier : Modifier = Modifier) {
@@ -32,6 +34,7 @@ fun AppNavigation(modifier : Modifier = Modifier) {
                     subclass(Route.SearchList::class, Route.SearchList.serializer())
                     subclass(Route.QuestionDetail::class, Route.QuestionDetail.serializer())
                     subclass(Route.UserScreen::class, Route.UserScreen.serializer())
+                    subclass(Route.QuestionRelated::class, Route.QuestionRelated.serializer())
                 }
             }
         },
@@ -120,8 +123,17 @@ fun AppNavigation(modifier : Modifier = Modifier) {
                     }
                 )
             }
-            entry<Route.QuestionRelated> {
-
+            entry<Route.QuestionRelated> { key ->
+                QuestionRelatedScreen(
+                    questionId = key.questionId,
+                    onQuestionClick = { item ->
+                        navigateTo(Route.QuestionDetail(item))
+                    },
+                    onOwnerClick = { userId ->
+                        navigateTo(Route.UserScreen(userId))
+                    },
+                    onBack =  ::navigateBack
+                )
             }
         }
     )
