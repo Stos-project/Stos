@@ -20,7 +20,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
@@ -110,14 +113,20 @@ class QuestionViewModel(
         _questionRelatedState.update { it.copy(sort = sort) }
     }
 
-    fun getRelatedQuestions(questionId: Int) : Flow<PagingData<QuestionItem>> {
-        return _questionRelatedState
-            .map {it.sort}
-            .distinctUntilChanged()
-            .flatMapLatest { sort ->
-                repository.getRelatedQuestions(sort = sort,questionId)
-            }
-            .cachedIn(viewModelScope)
+    private val relatedQuestionId = MutableStateFlow<Int?>(null)
 
+    private val relatedQuestionsFlow : Flow<PagingData<QuestionItem>> = combine(
+        relatedQuestionId.filterNotNull(),
+        _questionRelatedState.map { it.sort }.distinctUntilChanged()
+    ) { id, sort -> id to sort }
+        .flatMapLatest { (id, sort) ->
+            repository.getRelatedQuestions(sort = sort, questionId = id)
+        }
+        .cachedIn(viewModelScope)
+
+    fun getRelatedQuestions() : Flow<PagingData<QuestionItem>> = relatedQuestionsFlow
+
+    fun setRelatedQuestionId(id : Int) {
+        relatedQuestionId.value = id
     }
 }

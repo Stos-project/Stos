@@ -20,6 +20,7 @@ import com.m4ykey.stos.search.presentation.SearchScreen
 import com.m4ykey.stos.user.presentation.UserScreen
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
+import kotlinx.serialization.modules.subclass
 
 @Composable
 fun AppNavigation(modifier : Modifier = Modifier) {
@@ -33,6 +34,7 @@ fun AppNavigation(modifier : Modifier = Modifier) {
                     subclass(Route.SearchList::class, Route.SearchList.serializer())
                     subclass(Route.QuestionDetail::class, Route.QuestionDetail.serializer())
                     subclass(Route.UserScreen::class, Route.UserScreen.serializer())
+                    subclass(Route.QuestionRelated::class, Route.QuestionRelated.serializer())
                 }
             }
         },

@@ -109,7 +109,11 @@ fun QuestionRelatedContent(
     listState: LazyListState,
     questionId: Int
 ){
-    val items = viewModel.getRelatedQuestions(questionId).collectAsLazyPagingItems()
+    LaunchedEffect(questionId) {
+        viewModel.setRelatedQuestionId(questionId)
+    }
+
+    val items = viewModel.getRelatedQuestions().collectAsLazyPagingItems()
     val viewState by viewModel.questionRelatedState.collectAsStateWithLifecycle()
     val sort = viewState.sort
 
@@ -130,7 +134,7 @@ fun QuestionRelatedContent(
                 selectedChip = sort,
                 onChipSelected = { selectedSort ->
                     shouldScrollAfterRefresh = true
-                    //viewModel.updateRelatedSort(selectedSort)
+                    viewModel.updateRelatedSort(selectedSort)
                 }
             )
         }
