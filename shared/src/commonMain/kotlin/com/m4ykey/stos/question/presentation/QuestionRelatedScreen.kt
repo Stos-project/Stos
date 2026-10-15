@@ -70,7 +70,15 @@ fun QuestionRelatedScreen(
     AppScaffold(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         scrollBehavior = scrollBehavior,
-        content = {},
+        content = {
+            QuestionRelatedContent(
+                viewModel = viewModel,
+                onQuestionClick = onQuestionClick,
+                onOwnerClick = onOwnerClick,
+                listState = listState,
+                questionId = questionId
+            )
+        },
         navigation = {
             ActionButton(
                 icon = Res.drawable.ic_arrow_back,
@@ -102,7 +110,7 @@ fun QuestionRelatedContent(
     questionId: Int
 ){
     val items = viewModel.getRelatedQuestions(questionId).collectAsLazyPagingItems()
-    val viewState by viewModel.questionState.collectAsStateWithLifecycle()
+    val viewState by viewModel.questionRelatedState.collectAsStateWithLifecycle()
     val sort = viewState.sort
 
     var shouldScrollAfterRefresh by remember { mutableStateOf(false) }
