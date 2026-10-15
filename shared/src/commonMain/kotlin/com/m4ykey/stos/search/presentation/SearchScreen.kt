@@ -73,7 +73,9 @@ fun SearchScreen(
             SearchScreenContent(
                 value = value,
                 onValueChange = { value = it },
-                onSearch = { onSearch(value) },
+                onSearch = {
+                    if (value.isNotBlank()) onSearch(value.trim())
+                },
                 viewModel = viewModel
             )
         }
@@ -112,7 +114,7 @@ fun SearchScreenContent(
             is LoadState.Error -> {
                 ErrorItem(
                     message = loadState.error.message ?: "Loading error",
-                    onRetry = {  }
+                    onRetry = { tags.retry() }
                 )
             }
             is LoadState.NotLoading -> {
@@ -155,16 +157,7 @@ fun SearchText(
     val keyboardController = LocalSoftwareKeyboardController.current
 
     OutlinedTextField(
-        modifier = modifier
-            .fillMaxWidth()
-            .onKeyEvent { event ->
-                if (event.type == KeyEventType.KeyUp && event.key == Key.Enter) {
-                    onSearch()
-                    true
-                } else {
-                    false
-                }
-            },
+        modifier = modifier.fillMaxWidth(),
         value = value,
         onValueChange = onValueChange,
         leadingIcon = {

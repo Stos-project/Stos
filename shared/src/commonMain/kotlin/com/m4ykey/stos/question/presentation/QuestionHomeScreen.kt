@@ -118,7 +118,7 @@ fun QuestionContent(
     }
 
     Column(modifier = modifier.fillMaxSize()) {
-        Row(modifier = modifier.fillMaxWidth()) {
+        Row(modifier = Modifier.fillMaxWidth()) {
             ChipList(
                 modifier = Modifier.fillMaxWidth(),
                 availableSorts = QuestionSort.entries,
