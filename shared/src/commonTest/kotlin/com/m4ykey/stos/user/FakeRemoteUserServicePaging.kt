@@ -1,7 +1,7 @@
 package com.m4ykey.stos.user
 
-import com.m4ykey.stos.core.Items
-import com.m4ykey.stos.question.network.model.QuestionItemDto
+import com.m4ykey.stos.core.model.Items
+import com.m4ykey.stos.question.data.remote.model.QuestionItemDto
 import com.m4ykey.stos.user.data.remote.model.AnswerItemDto
 import com.m4ykey.stos.user.data.remote.model.OwnerDto
 import com.m4ykey.stos.user.data.remote.service.RemoteUserService

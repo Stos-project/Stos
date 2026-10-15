@@ -19,8 +19,8 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.m4ykey.stos.core.formatCreationDate
-import com.m4ykey.stos.core.formatReputation
+import com.m4ykey.stos.core.formats.formatCreationDate
+import com.m4ykey.stos.core.formats.formatReputation
 import com.m4ykey.stos.question.domain.model.QuestionItem
 import com.m4ykey.stos.user.presentation.components.UserCard
 import com.m4ykey.text_markdown.TextMarkdown
