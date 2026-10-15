@@ -10,8 +10,10 @@ import com.m4ykey.stos.core.network.ApiResult
 import com.m4ykey.stos.question.domain.model.QuestionAnswer
 import com.m4ykey.stos.question.domain.model.QuestionItem
 import com.m4ykey.stos.question.domain.model.QuestionSort
+import com.m4ykey.stos.question.domain.model.RelatedQuestionSort
 import com.m4ykey.stos.question.domain.repository.QuestionRepository
 import com.m4ykey.stos.question.presentation.state.QuestionDetailState
+import com.m4ykey.stos.question.presentation.state.QuestionRelatedState
 import com.m4ykey.stos.question.presentation.state.QuestionState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -34,6 +36,10 @@ class QuestionViewModel(
 
     private val _questionDetailState = MutableStateFlow(QuestionDetailState())
     val questionDetailState = _questionDetailState.asStateFlow()
+
+    private val _questionRelatedState = MutableStateFlow(QuestionRelatedState())
+
+    val questionRelatedState = _questionRelatedState.asStateFlow()
 
     fun getQuestionAnswer(id : Int) : Flow<PagingData<QuestionAnswer>> =
         repository.getQuestionAnswers(id)
@@ -98,5 +104,20 @@ class QuestionViewModel(
 
     fun updateSort(sort : QuestionSort) {
         _questionState.update { it.copy(sort = sort) }
+    }
+
+    fun updateRelatedSort(sort : RelatedQuestionSort){
+        _questionRelatedState.update { it.copy(sort = sort) }
+    }
+
+    fun getRelatedQuestions(questionId: Int) : Flow<PagingData<QuestionItem>> {
+        return _questionRelatedState
+            .map {it.sort}
+            .distinctUntilChanged()
+            .flatMapLatest { sort ->
+                repository.getRelatedQuestions(sort = sort.name,questionId)
+            }
+            .cachedIn(viewModelScope)
+
     }
 }
