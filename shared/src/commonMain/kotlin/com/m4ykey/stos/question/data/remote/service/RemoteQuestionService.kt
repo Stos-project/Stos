@@ -4,11 +4,11 @@ import com.m4ykey.stos.core.Filters.QUESTION_ANSWER_FILTER
 import com.m4ykey.stos.core.Filters.QUESTION_DETAIL_FILTER
 import com.m4ykey.stos.core.Filters.QUESTION_HOME_FILTER
 import com.m4ykey.stos.core.model.Items
-import com.m4ykey.stos.question.domain.model.QuestionSort
-import com.m4ykey.stos.question.domain.model.RelatedQuestionSort
 import com.m4ykey.stos.question.data.remote.model.QuestionAnswerDto
 import com.m4ykey.stos.question.data.remote.model.QuestionDetailDto
 import com.m4ykey.stos.question.data.remote.model.QuestionItemDto
+import com.m4ykey.stos.question.domain.model.QuestionSort
+import com.m4ykey.stos.question.domain.model.RelatedQuestionSort
 
 interface RemoteQuestionService {
 

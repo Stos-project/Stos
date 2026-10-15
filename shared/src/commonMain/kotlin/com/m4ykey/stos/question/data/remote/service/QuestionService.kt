@@ -1,11 +1,11 @@
 package com.m4ykey.stos.question.data.remote.service
 
 import com.m4ykey.stos.core.model.Items
-import com.m4ykey.stos.question.domain.model.QuestionSort
-import com.m4ykey.stos.question.domain.model.RelatedQuestionSort
 import com.m4ykey.stos.question.data.remote.model.QuestionAnswerDto
 import com.m4ykey.stos.question.data.remote.model.QuestionDetailDto
 import com.m4ykey.stos.question.data.remote.model.QuestionItemDto
+import com.m4ykey.stos.question.domain.model.QuestionSort
+import com.m4ykey.stos.question.domain.model.RelatedQuestionSort
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get

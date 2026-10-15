@@ -16,6 +16,7 @@ import com.m4ykey.stos.question.presentation.state.QuestionDetailState
 import com.m4ykey.stos.question.presentation.state.QuestionRelatedState
 import com.m4ykey.stos.question.presentation.state.QuestionState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -23,7 +24,6 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
@@ -41,49 +41,37 @@ class QuestionViewModel(
     val questionDetailState = _questionDetailState.asStateFlow()
 
     private val _questionRelatedState = MutableStateFlow(QuestionRelatedState())
-
     val questionRelatedState = _questionRelatedState.asStateFlow()
 
-    fun getQuestionAnswer(id : Int) : Flow<PagingData<QuestionAnswer>> =
-        repository.getQuestionAnswers(id)
-            .cachedIn(viewModelScope)
+    private val relatedQuestionId = MutableStateFlow<Int?>(null)
+    private val answersQuestionId = MutableStateFlow<Int?>(null)
+
+    private var detailJob : Job? = null
 
     fun getQuestionDetail(questionId : Int) {
-        viewModelScope.launch {
+        detailJob?.cancel()
+        detailJob = viewModelScope.launch {
             repository.getQuestionById(questionId)
                 .onStart {
                     _questionDetailState.update {
-                        it.copy(
-                            isLoading = true,
-                            error = null
-                        )
+                        it.copy(isLoading = true, error = null)
                     }
                 }
                 .catch { e ->
                     _questionDetailState.update {
-                        it.copy(
-                            isLoading = false,
-                            error = e.message
-                        )
+                        it.copy(isLoading = false, error = e.message)
                     }
                 }
                 .collect { result ->
                     when (result) {
                         is ApiResult.Success -> {
                             _questionDetailState.update {
-                                it.copy(
-                                    isLoading = false,
-                                    error = null,
-                                    item = result.data
-                                )
+                                it.copy(isLoading = false, error = null, item = result.data)
                             }
                         }
                         is ApiResult.Failure -> {
                             _questionDetailState.update {
-                                it.copy(
-                                    isLoading = false,
-                                    error = result.exception.message
-                                )
+                                it.copy(isLoading = false, error = result.exception.message)
                             }
                         }
                     }
@@ -95,6 +83,14 @@ class QuestionViewModel(
         getQuestionDetail(questionId)
     }
 
+    private val answersFlow : Flow<PagingData<QuestionAnswer>> = answersQuestionId
+        .filterNotNull()
+        .distinctUntilChanged()
+        .flatMapLatest { id ->
+            repository.getQuestionAnswers(id)
+        }
+        .cachedIn(viewModelScope)
+
     private val questionFlow : Flow<PagingData<QuestionItem>> = _questionState
         .map { it.sort }
         .distinctUntilChanged()
@@ -102,18 +98,6 @@ class QuestionViewModel(
             repository.getQuestions(sort = sort.name)
         }
         .cachedIn(viewModelScope)
-
-    fun getQuestions() : Flow<PagingData<QuestionItem>> = questionFlow
-
-    fun updateSort(sort : QuestionSort) {
-        _questionState.update { it.copy(sort = sort) }
-    }
-
-    fun updateRelatedSort(sort : RelatedQuestionSort){
-        _questionRelatedState.update { it.copy(sort = sort) }
-    }
-
-    private val relatedQuestionId = MutableStateFlow<Int?>(null)
 
     private val relatedQuestionsFlow : Flow<PagingData<QuestionItem>> = combine(
         relatedQuestionId.filterNotNull(),
@@ -124,7 +108,23 @@ class QuestionViewModel(
         }
         .cachedIn(viewModelScope)
 
+    fun getQuestions() : Flow<PagingData<QuestionItem>> = questionFlow
+
     fun getRelatedQuestions() : Flow<PagingData<QuestionItem>> = relatedQuestionsFlow
+
+    fun getQuestionAnswers() : Flow<PagingData<QuestionAnswer>> = answersFlow
+
+    fun setAnswersQuestionId(id : Int) {
+        answersQuestionId.value = id
+    }
+
+    fun updateSort(sort : QuestionSort) {
+        _questionState.update { it.copy(sort = sort) }
+    }
+
+    fun updateRelatedSort(sort : RelatedQuestionSort){
+        _questionRelatedState.update { it.copy(sort = sort) }
+    }
 
     fun setRelatedQuestionId(id : Int) {
         relatedQuestionId.value = id

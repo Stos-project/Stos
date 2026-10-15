@@ -4,11 +4,11 @@ import androidx.paging.Pager
 import androidx.paging.PagingData
 import com.m4ykey.stos.core.paging.pagingConfig
 import com.m4ykey.stos.question.domain.model.QuestionItem
-import com.m4ykey.stos.search.domain.model.TagsItem
-import com.m4ykey.stos.search.domain.repository.SearchRepository
 import com.m4ykey.stos.search.data.remote.paging.SearchPagingSource
 import com.m4ykey.stos.search.data.remote.paging.SearchPagingTags
 import com.m4ykey.stos.search.data.remote.service.RemoteSearchService
+import com.m4ykey.stos.search.domain.model.TagsItem
+import com.m4ykey.stos.search.domain.repository.SearchRepository
 import kotlinx.coroutines.flow.Flow
 
 class SearchRepositoryImpl(

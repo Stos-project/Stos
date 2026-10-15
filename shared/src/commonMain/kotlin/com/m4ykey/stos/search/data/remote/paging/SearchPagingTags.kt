@@ -4,9 +4,9 @@ import com.m4ykey.stos.core.network.ApiResult
 import com.m4ykey.stos.core.network.safeApi
 import com.m4ykey.stos.core.paging.BasePagingSource
 import com.m4ykey.stos.core.paging.PageResult
-import com.m4ykey.stos.search.domain.model.TagsItem
 import com.m4ykey.stos.search.data.mapper.toTagsItem
 import com.m4ykey.stos.search.data.remote.service.RemoteSearchService
+import com.m4ykey.stos.search.domain.model.TagsItem
 
 class SearchPagingTags(
     private val service : RemoteSearchService

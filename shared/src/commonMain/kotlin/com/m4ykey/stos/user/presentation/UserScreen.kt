@@ -3,6 +3,7 @@ package com.m4ykey.stos.user.presentation
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -23,7 +24,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemContentType
+import androidx.paging.compose.itemKey
 import com.m4ykey.stos.core.network.openBrowser
+import com.m4ykey.stos.core.paging.PagingAppendState
 import com.m4ykey.stos.core.ui.ActionButton
 import com.m4ykey.stos.core.ui.AppScaffold
 import com.m4ykey.stos.core.ui.ErrorItem
@@ -133,24 +137,25 @@ fun UserScreenContent(
         state.isLoading -> LoadingItem()
         state.error != null -> ErrorItem(
             message = state.error,
-            onRetry = { onRetry() }
+            onRetry = onRetry
         )
         else -> {
-            val item = state.user
+            val user = state.user
 
-            if (item != null) {
+            if (user != null) {
                 LazyColumn(
                     state = listState,
-                    modifier = Modifier
+                    modifier = modifier
                         .fillMaxWidth()
-                        .padding(10.dp)
+                        .padding(10.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     item {
                         UserProfile(
-                            profileImage = item.profileImage,
-                            displayName = item.displayName,
-                            reputation = item.reputation,
-                            badgeCounts = item.badgeCounts
+                            profileImage = user.profileImage,
+                            displayName = user.displayName,
+                            reputation = user.reputation,
+                            badgeCounts = user.badgeCounts
                         )
                     }
                     item {
@@ -163,39 +168,59 @@ fun UserScreenContent(
                             )
                         }
                     }
+
+                    when (val refresh = userProfileItem.loadState.refresh) {
+                        is LoadState.Loading -> {
+                            if (userProfileItem.itemCount == 0) {
+                                item { LoadingItem() }
+                            }
+                        }
+                        is LoadState.Error -> {
+                            item {
+                                ErrorItem(
+                                    message = refresh.error.message ?: "Loading error",
+                                    onRetry = { userProfileItem.retry() }
+                                )
+                            }
+                        }
+                        is LoadState.NotLoading -> Unit
+                    }
+
                     items(
-                        key = { index ->
-                            when (val item = userProfileItem[index]) {
-                                is UserProfileItem.Answer -> item.item.answerId
-                                is UserProfileItem.Question -> item.item.questionId
-                                null -> index
+                        key = userProfileItem.itemKey { entry ->
+                            when (entry) {
+                                is UserProfileItem.Answer -> "a_${entry.item.answerId}"
+                                is UserProfileItem.Question -> "q_${entry.item.questionId}"
                             }
                         },
-                        count = userProfileItem.itemCount
+                        count = userProfileItem.itemCount,
+                        contentType = userProfileItem.itemContentType { entry ->
+                            when (entry) {
+                                is UserProfileItem.Question -> "question"
+                                is UserProfileItem.Answer -> "answer"
+                            }
+                        }
                     ) { index ->
-                        when (val item = userProfileItem[index]) {
+                        when (val entry = userProfileItem[index]) {
                             is UserProfileItem.Question -> {
                                 QuestionListItem(
                                     onQuestionClick = onQuestionClick,
-                                    item = item.item
+                                    item = entry.item
                                 )
                             }
 
                             is UserProfileItem.Answer -> {
                                 AnswerListItem(
                                     onQuestionClick = onQuestionClick,
-                                    item = item.item
+                                    item = entry.item
                                 )
                             }
-
-                            else -> Unit
+                            null -> Unit
                         }
                     }
 
-                    if (userProfileItem.loadState.append is LoadState.Loading) {
-                        item {
-                            LoadingItem()
-                        }
+                    item {
+                        PagingAppendState(items = userProfileItem)
                     }
                 }
             }

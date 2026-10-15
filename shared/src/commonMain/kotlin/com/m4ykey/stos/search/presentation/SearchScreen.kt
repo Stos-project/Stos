@@ -24,11 +24,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.key.Key
-import androidx.compose.ui.input.key.KeyEventType
-import androidx.compose.ui.input.key.key
-import androidx.compose.ui.input.key.onKeyEvent
-import androidx.compose.ui.input.key.type
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -73,7 +68,9 @@ fun SearchScreen(
             SearchScreenContent(
                 value = value,
                 onValueChange = { value = it },
-                onSearch = { onSearch(value) },
+                onSearch = {
+                    if (value.isNotBlank()) onSearch(value.trim())
+                },
                 viewModel = viewModel
             )
         }
@@ -112,7 +109,7 @@ fun SearchScreenContent(
             is LoadState.Error -> {
                 ErrorItem(
                     message = loadState.error.message ?: "Loading error",
-                    onRetry = {  }
+                    onRetry = { tags.retry() }
                 )
             }
             is LoadState.NotLoading -> {
@@ -155,16 +152,7 @@ fun SearchText(
     val keyboardController = LocalSoftwareKeyboardController.current
 
     OutlinedTextField(
-        modifier = modifier
-            .fillMaxWidth()
-            .onKeyEvent { event ->
-                if (event.type == KeyEventType.KeyUp && event.key == Key.Enter) {
-                    onSearch()
-                    true
-                } else {
-                    false
-                }
-            },
+        modifier = modifier.fillMaxWidth(),
         value = value,
         onValueChange = onValueChange,
         leadingIcon = {

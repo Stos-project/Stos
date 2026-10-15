@@ -4,9 +4,9 @@ import com.m4ykey.stos.core.network.ApiResult
 import com.m4ykey.stos.core.network.safeApi
 import com.m4ykey.stos.core.paging.BasePagingSource
 import com.m4ykey.stos.core.paging.PageResult
-import com.m4ykey.stos.user.domain.model.AnswerItem
 import com.m4ykey.stos.user.data.mapper.toAnswerItem
 import com.m4ykey.stos.user.data.remote.service.RemoteUserService
+import com.m4ykey.stos.user.domain.model.AnswerItem
 
 class UserAnswerPagingSource(
     private val service : RemoteUserService,

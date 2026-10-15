@@ -3,7 +3,6 @@ package com.m4ykey.stos.user
 import androidx.paging.PagingSource
 import com.m4ykey.stos.core.network.ApiException
 import com.m4ykey.stos.user.data.remote.paging.UserAnswerPagingSource
-import com.m4ykey.stos.user.data.remote.paging.UserQuestionPagingSource
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import kotlin.test.assertEquals
