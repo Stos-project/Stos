@@ -6,14 +6,13 @@ import com.m4ykey.stos.core.network.ApiResult
 import com.m4ykey.stos.core.network.safeApi
 import com.m4ykey.stos.core.paging.pagingConfig
 import com.m4ykey.stos.question.domain.model.QuestionItem
-import com.m4ykey.stos.user.domain.model.AnswerItem
-import com.m4ykey.stos.user.domain.model.Owner
-import com.m4ykey.stos.user.domain.repository.UserRepository
 import com.m4ykey.stos.user.data.mapper.toOwner
 import com.m4ykey.stos.user.data.remote.paging.UserAnswerPagingSource
 import com.m4ykey.stos.user.data.remote.paging.UserQuestionPagingSource
 import com.m4ykey.stos.user.data.remote.service.RemoteUserService
-import com.m4ykey.stos.user.data.remote.service.UserService
+import com.m4ykey.stos.user.domain.model.AnswerItem
+import com.m4ykey.stos.user.domain.model.Owner
+import com.m4ykey.stos.user.domain.repository.UserRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

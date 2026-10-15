@@ -27,7 +27,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
@@ -37,7 +36,6 @@ import com.m4ykey.stos.core.ui.AppScaffold
 import com.m4ykey.stos.core.ui.ErrorItem
 import com.m4ykey.stos.core.ui.FloatingActionArrowUp
 import com.m4ykey.stos.core.ui.LoadingItem
-import com.m4ykey.stos.question.domain.model.QuestionSort
 import com.m4ykey.stos.question.domain.model.RelatedQuestionSort
 import com.m4ykey.stos.question.presentation.components.ChipList
 import com.m4ykey.stos.question.presentation.components.QuestionListItem

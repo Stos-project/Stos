@@ -3,7 +3,6 @@ package com.m4ykey.stos.question.presentation
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,19 +10,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -45,14 +38,12 @@ import com.m4ykey.stos.core.ui.LoadingItem
 import com.m4ykey.stos.question.domain.model.BadgeCounts
 import com.m4ykey.stos.question.domain.model.QuestionAnswer
 import com.m4ykey.stos.question.presentation.components.AnswerItem
-import com.m4ykey.stos.question.presentation.components.ChipItem
 import com.m4ykey.stos.question.presentation.components.QuestionInfoRow
 import com.m4ykey.stos.question.presentation.components.TagListWrap
 import com.m4ykey.stos.question.presentation.state.QuestionDetailState
 import com.m4ykey.stos.user.presentation.components.BadgeCountsRow
 import com.m4ykey.stos.user.presentation.components.UserCard
 import com.m4ykey.text_markdown.TextMarkdown
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import stos.shared.generated.resources.Res
@@ -60,13 +51,11 @@ import stos.shared.generated.resources.answers
 import stos.shared.generated.resources.back
 import stos.shared.generated.resources.ic_arrow_back
 import stos.shared.generated.resources.ic_category
-import stos.shared.generated.resources.ic_check
 import stos.shared.generated.resources.ic_link
 import stos.shared.generated.resources.last_editor
 import stos.shared.generated.resources.link
 import stos.shared.generated.resources.no_answers
 import stos.shared.generated.resources.related_questions
-import stos.shared.generated.resources.votes
 
 @Composable
 fun QuestionDetailScreen(

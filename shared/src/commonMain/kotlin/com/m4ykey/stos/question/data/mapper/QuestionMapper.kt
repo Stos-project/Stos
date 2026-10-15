@@ -1,13 +1,13 @@
 package com.m4ykey.stos.question.data.mapper
 
-import com.m4ykey.stos.question.domain.model.QuestionAnswer
-import com.m4ykey.stos.question.domain.model.QuestionDetail
-import com.m4ykey.stos.question.domain.model.QuestionItem
 import com.m4ykey.stos.question.data.remote.model.QuestionAnswerDto
 import com.m4ykey.stos.question.data.remote.model.QuestionDetailDto
 import com.m4ykey.stos.question.data.remote.model.QuestionItemDto
-import com.m4ykey.stos.user.domain.model.Owner
+import com.m4ykey.stos.question.domain.model.QuestionAnswer
+import com.m4ykey.stos.question.domain.model.QuestionDetail
+import com.m4ykey.stos.question.domain.model.QuestionItem
 import com.m4ykey.stos.user.data.mapper.toOwner
+import com.m4ykey.stos.user.domain.model.Owner
 
 fun QuestionDetailDto.toQuestionDetail() : QuestionDetail {
     return QuestionDetail(

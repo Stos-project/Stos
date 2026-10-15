@@ -1,10 +1,10 @@
 package com.m4ykey.stos.question.di
 
-import com.m4ykey.stos.question.domain.repository.QuestionRepository
 import com.m4ykey.stos.question.data.remote.service.QuestionService
 import com.m4ykey.stos.question.data.remote.service.RemoteQuestionService
-import com.m4ykey.stos.question.presentation.QuestionViewModel
 import com.m4ykey.stos.question.data.repository.QuestionRepositoryImpl
+import com.m4ykey.stos.question.domain.repository.QuestionRepository
+import com.m4ykey.stos.question.presentation.QuestionViewModel
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.bind

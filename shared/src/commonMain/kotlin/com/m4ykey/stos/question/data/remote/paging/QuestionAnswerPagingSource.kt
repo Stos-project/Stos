@@ -4,9 +4,9 @@ import com.m4ykey.stos.core.network.ApiResult
 import com.m4ykey.stos.core.network.safeApi
 import com.m4ykey.stos.core.paging.BasePagingSource
 import com.m4ykey.stos.core.paging.PageResult
-import com.m4ykey.stos.question.domain.model.QuestionAnswer
 import com.m4ykey.stos.question.data.mapper.toQuestionAnswer
 import com.m4ykey.stos.question.data.remote.service.RemoteQuestionService
+import com.m4ykey.stos.question.domain.model.QuestionAnswer
 
 class QuestionAnswerPagingSource(
     private val id : Int,

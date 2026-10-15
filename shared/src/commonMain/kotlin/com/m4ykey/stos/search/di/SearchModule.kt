@@ -1,10 +1,10 @@
 package com.m4ykey.stos.search.di
 
-import com.m4ykey.stos.search.domain.repository.SearchRepository
 import com.m4ykey.stos.search.data.remote.service.RemoteSearchService
 import com.m4ykey.stos.search.data.remote.service.SearchService
-import com.m4ykey.stos.search.presentation.SearchViewModel
 import com.m4ykey.stos.search.data.repository.SearchRepositoryImpl
+import com.m4ykey.stos.search.domain.repository.SearchRepository
+import com.m4ykey.stos.search.presentation.SearchViewModel
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.bind

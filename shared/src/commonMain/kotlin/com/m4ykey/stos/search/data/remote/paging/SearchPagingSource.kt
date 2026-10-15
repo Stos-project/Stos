@@ -4,8 +4,8 @@ import com.m4ykey.stos.core.network.ApiResult
 import com.m4ykey.stos.core.network.safeApi
 import com.m4ykey.stos.core.paging.BasePagingSource
 import com.m4ykey.stos.core.paging.PageResult
-import com.m4ykey.stos.question.domain.model.QuestionItem
 import com.m4ykey.stos.question.data.mapper.toQuestionItem
+import com.m4ykey.stos.question.domain.model.QuestionItem
 import com.m4ykey.stos.search.data.remote.service.RemoteSearchService
 
 class SearchPagingSource(
