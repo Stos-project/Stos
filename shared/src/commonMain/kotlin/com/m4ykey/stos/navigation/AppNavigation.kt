@@ -14,6 +14,7 @@ import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
 import com.m4ykey.stos.question.presentation.QuestionDetailScreen
 import com.m4ykey.stos.question.presentation.QuestionHomeScreen
+import com.m4ykey.stos.question.presentation.QuestionRelatedScreen
 import com.m4ykey.stos.search.presentation.SearchListScreen
 import com.m4ykey.stos.search.presentation.SearchScreen
 import com.m4ykey.stos.user.presentation.UserScreen
@@ -120,8 +121,17 @@ fun AppNavigation(modifier : Modifier = Modifier) {
                     }
                 )
             }
-            entry<Route.QuestionRelated> {
-
+            entry<Route.QuestionRelated> { key ->
+                QuestionRelatedScreen(
+                    questionId = key.questionId,
+                    onQuestionClick = { item ->
+                        navigateTo(Route.QuestionDetail(item))
+                    },
+                    onOwnerClick = { userId ->
+                        navigateTo(Route.UserScreen(userId))
+                    },
+                    onBack =  ::navigateBack
+                )
             }
         }
     )

@@ -115,7 +115,7 @@ class QuestionViewModel(
             .map {it.sort}
             .distinctUntilChanged()
             .flatMapLatest { sort ->
-                repository.getRelatedQuestions(sort = sort.name,questionId)
+                repository.getRelatedQuestions(sort = sort,questionId)
             }
             .cachedIn(viewModelScope)
 

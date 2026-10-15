@@ -2,6 +2,7 @@ package com.m4ykey.stos.question.network.service
 
 import com.m4ykey.stos.core.Items
 import com.m4ykey.stos.question.domain.model.QuestionSort
+import com.m4ykey.stos.question.domain.model.RelatedQuestionSort
 import com.m4ykey.stos.question.network.model.QuestionAnswerDto
 import com.m4ykey.stos.question.network.model.QuestionDetailDto
 import com.m4ykey.stos.question.network.model.QuestionItemDto
@@ -75,7 +76,7 @@ class QuestionService(private val client : HttpClient) : RemoteQuestionService {
         page: Int,
         pageSize: Int,
         order: String,
-        sort: String,
+        sort: RelatedQuestionSort,
         site: String,
         filter: String
     ): Items<QuestionItemDto> {

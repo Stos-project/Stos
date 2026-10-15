@@ -8,6 +8,7 @@ import com.m4ykey.stos.core.paging.pagingConfig
 import com.m4ykey.stos.question.domain.model.QuestionAnswer
 import com.m4ykey.stos.question.domain.model.QuestionDetail
 import com.m4ykey.stos.question.domain.model.QuestionItem
+import com.m4ykey.stos.question.domain.model.RelatedQuestionSort
 import com.m4ykey.stos.question.domain.repository.QuestionRepository
 import com.m4ykey.stos.question.mapper.toQuestionDetail
 import com.m4ykey.stos.question.network.paging.QuestionAnswerPagingSource
@@ -60,7 +61,7 @@ class QuestionRepositoryImpl(
     }
 
     override fun getRelatedQuestions(
-        sort: String,
+        sort: RelatedQuestionSort,
         questionId: Int
     ): Flow<PagingData<QuestionItem>> {
         return Pager(
