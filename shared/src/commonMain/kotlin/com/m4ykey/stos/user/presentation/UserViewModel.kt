@@ -14,6 +14,7 @@ import com.m4ykey.stos.user.domain.repository.UserRepository
 import com.m4ykey.stos.user.presentation.state.UserSortState
 import com.m4ykey.stos.user.presentation.state.UserState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -39,42 +40,29 @@ class UserViewModel(
 
     private val _userId = MutableStateFlow<Int?>(null)
 
+    private var userJob : Job? = null
+
     fun getUserById(userId : Int) {
-        viewModelScope.launch {
+        userJob?.cancel()
+        userJob = viewModelScope.launch {
             repository.getUserById(userId)
                 .onStart {
-                    _userState.update {
-                        it.copy(
-                            isLoading = true,
-                            error = null
-                        )
-                    }
+                    _userState.update { it.copy(isLoading = true, error = null) }
                 }
                 .catch { e ->
-                    _userState.update {
-                        it.copy(
-                            isLoading = false,
-                            error = e.message
-                        )
+                    _userState.update { it.copy(isLoading = false, error = e.message)
                     }
                 }
                 .collect { result ->
                     when (result) {
                         is ApiResult.Success -> {
                             _userState.update {
-                                it.copy(
-                                    isLoading = false,
-                                    error = null,
-                                    user = result.data
-                                )
+                                it.copy(isLoading = false, error = null, user = result.data)
                             }
                         }
                         is ApiResult.Failure -> {
                             _userState.update {
-                                it.copy(
-                                    isLoading = false,
-                                    error = result.exception.message
-                                )
+                                it.copy(isLoading = false, error = result.exception.message)
                             }
                         }
                     }
@@ -85,7 +73,7 @@ class UserViewModel(
     val userQuestionItems : Flow<PagingData<UserProfileItem>> =
         combine(
             _userId,
-            userSortState.map { it.sort }.distinctUntilChanged()
+            _userSortState.map { it.sort }.distinctUntilChanged()
         ) { userId, sort ->
             userId to sort
         }.flatMapLatest { (userId, sort) ->

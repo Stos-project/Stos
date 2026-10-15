@@ -16,10 +16,12 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 
 class SearchViewModel(
@@ -33,22 +35,28 @@ class SearchViewModel(
         repository.getSearchTags()
             .cachedIn(viewModelScope)
 
-    private val searchFlow : Flow<PagingData<QuestionItem>> = _searchState
-        .debounce { state -> if (state.inTitle.isNullOrBlank()) 0L else 300L }
-        .distinctUntilChanged()
-        .flatMapLatest { state ->
-            if (state.inTitle.isNullOrBlank()) {
+    private val searchFlow : Flow<PagingData<QuestionItem>> = combine(
+        _searchState
+            .map { it.inTitle?.trim().orEmpty() }
+            .distinctUntilChanged()
+            .debounce { query -> if (query.isEmpty()) 0L else 300L },
+        _searchState
+            .map { it.sort }
+            .distinctUntilChanged()
+    ) { query, sort -> query to sort }
+        .flatMapLatest { (query, sort) ->
+            if (query.isEmpty()) {
                 flowOf(PagingData.empty())
-            } else {
+            } else  {
                 repository.searchQuestions(
-                    inTitle = state.inTitle,
-                    sort = state.sort.name
+                    inTitle = query,
+                    sort = sort.name
                 )
             }
         }
         .cachedIn(viewModelScope)
 
-    fun searchQuestions(query : String) : Flow<PagingData<QuestionItem>> = searchFlow
+    fun searchQuestions() : Flow<PagingData<QuestionItem>> = searchFlow
 
     fun updateSort(sort : SearchSort) {
         _searchState.update { it.copy(sort = sort) }
@@ -56,5 +64,9 @@ class SearchViewModel(
 
     fun updateQuery(query : String) {
         _searchState.update { it.copy(inTitle = query) }
+    }
+
+    fun initQuery(query : String) {
+        _searchState.update { if (it.inTitle == null) it.copy(inTitle = query) else it }
     }
 }
