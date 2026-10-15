@@ -36,4 +36,14 @@ interface RemoteQuestionService {
         filter : String = QUESTION_ANSWER_FILTER
     ) : Items<QuestionAnswerDto>
 
+    suspend fun getQuestionRelated(
+        id : Int,
+        page : Int,
+        pageSize : Int,
+        order : String = "desc",
+        sort : String = "activity",
+        site : String = "stackoverflow",
+        filter : String = QUESTION_HOME_FILTER
+    ) : Items<QuestionItemDto>
+
 }

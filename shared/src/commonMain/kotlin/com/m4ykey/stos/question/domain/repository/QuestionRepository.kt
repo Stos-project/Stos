@@ -13,4 +13,5 @@ interface QuestionRepository {
     suspend fun getQuestionById(questionId : Int) : Flow<ApiResult<QuestionDetail>>
     fun getQuestionAnswers(questionId : Int) : Flow<PagingData<QuestionAnswer>>
 
+    fun getRelatedQuestions(sort: String, questionId: Int) : Flow<PagingData<QuestionItem>>
 }

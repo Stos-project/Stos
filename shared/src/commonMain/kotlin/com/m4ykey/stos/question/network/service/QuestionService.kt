@@ -69,4 +69,26 @@ class QuestionService(private val client : HttpClient) : RemoteQuestionService {
             }
         }.body()
     }
+
+    override suspend fun getQuestionRelated(
+        id: Int,
+        page: Int,
+        pageSize: Int,
+        order: String,
+        sort: String,
+        site: String,
+        filter: String
+    ): Items<QuestionItemDto> {
+        return client.get {
+            url{
+                appendPathSegments("questions/$id/related")
+                parameter("site", site)
+                parameter("page", page)
+                parameter("page_size", pageSize)
+                parameter("order", order)
+                parameter("sort", sort)
+                parameter("filter", filter)
+            }
+        }.body()
+    }
 }

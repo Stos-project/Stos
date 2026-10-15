@@ -12,6 +12,7 @@ import com.m4ykey.stos.question.domain.repository.QuestionRepository
 import com.m4ykey.stos.question.mapper.toQuestionDetail
 import com.m4ykey.stos.question.network.paging.QuestionAnswerPagingSource
 import com.m4ykey.stos.question.network.paging.QuestionPagingSource
+import com.m4ykey.stos.question.network.paging.QuestionRelatedPagingSource
 import com.m4ykey.stos.question.network.service.RemoteQuestionService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -54,6 +55,18 @@ class QuestionRepositoryImpl(
             config = pagingConfig,
             pagingSourceFactory = {
                 QuestionAnswerPagingSource(service = service, id = questionId)
+            }
+        ).flow
+    }
+
+    override fun getRelatedQuestions(
+        sort: String,
+        questionId: Int
+    ): Flow<PagingData<QuestionItem>> {
+        return Pager(
+            config = pagingConfig,
+            pagingSourceFactory = {
+                QuestionRelatedPagingSource(service = service, id = questionId, sort = sort)
             }
         ).flow
     }
