@@ -13,8 +13,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.m4ykey.stos.core.formatCreationDate
-import com.m4ykey.stos.core.formatReputation
+import com.m4ykey.stos.core.formats.formatCreationDate
+import com.m4ykey.stos.core.formats.formatReputation
 import com.m4ykey.stos.user.domain.model.AnswerItem
 import com.m4ykey.text_markdown.TextMarkdown
 

@@ -1,6 +1,6 @@
 package com.m4ykey.stos.question.domain.model
 
-import com.m4ykey.stos.core.SortOption
+import com.m4ykey.stos.core.model.SortOption
 import org.jetbrains.compose.resources.StringResource
 import stos.shared.generated.resources.Res
 import stos.shared.generated.resources.activity

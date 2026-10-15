@@ -1,7 +1,7 @@
 package com.m4ykey.stos.user.data.mapper
 
 import com.m4ykey.stos.question.domain.model.BadgeCounts
-import com.m4ykey.stos.question.network.model.BadgeCountsDto
+import com.m4ykey.stos.question.data.remote.model.BadgeCountsDto
 import com.m4ykey.stos.user.domain.model.AnswerItem
 import com.m4ykey.stos.user.domain.model.Owner
 import com.m4ykey.stos.user.data.remote.model.AnswerItemDto

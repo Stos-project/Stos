@@ -1,6 +1,6 @@
 package com.m4ykey.stos.user.data.remote.model
 
-import com.m4ykey.stos.question.network.model.BadgeCountsDto
+import com.m4ykey.stos.question.data.remote.model.BadgeCountsDto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
