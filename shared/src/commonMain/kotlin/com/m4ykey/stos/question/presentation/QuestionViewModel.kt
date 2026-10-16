@@ -15,6 +15,7 @@ import com.m4ykey.stos.question.domain.repository.QuestionRepository
 import com.m4ykey.stos.question.presentation.state.QuestionDetailState
 import com.m4ykey.stos.question.presentation.state.QuestionRelatedState
 import com.m4ykey.stos.question.presentation.state.QuestionState
+import com.m4ykey.stos.question.presentation.state.QuestionTagState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
@@ -43,8 +44,13 @@ class QuestionViewModel(
     private val _questionRelatedState = MutableStateFlow(QuestionRelatedState())
     val questionRelatedState = _questionRelatedState.asStateFlow()
 
+    private val _questionTagState = MutableStateFlow(QuestionTagState())
+    val questionTagState = _questionTagState.asStateFlow()
+
     private val relatedQuestionId = MutableStateFlow<Int?>(null)
     private val answersQuestionId = MutableStateFlow<Int?>(null)
+
+    private val taggedName = MutableStateFlow<String?>(null)
 
     private var detailJob : Job? = null
 
@@ -108,11 +114,26 @@ class QuestionViewModel(
         }
         .cachedIn(viewModelScope)
 
+    private val tagQuestionFlow : Flow<PagingData<QuestionItem>> = combine(
+        taggedName.filterNotNull(),
+        _questionTagState.map { it.sort }.distinctUntilChanged()
+    ) { tag, sort -> tag to sort }
+        .flatMapLatest { (tag, sort) ->
+            repository.getQuestionTag(sort = sort.name, tagged = tag)
+        }
+        .cachedIn(viewModelScope)
+
+    fun getQuestionsTag() : Flow<PagingData<QuestionItem>> = tagQuestionFlow
+
     fun getQuestions() : Flow<PagingData<QuestionItem>> = questionFlow
 
     fun getRelatedQuestions() : Flow<PagingData<QuestionItem>> = relatedQuestionsFlow
 
     fun getQuestionAnswers() : Flow<PagingData<QuestionAnswer>> = answersFlow
+
+    fun setTag(tag : String) {
+        taggedName.value = tag
+    }
 
     fun setAnswersQuestionId(id : Int) {
         answersQuestionId.value = id
@@ -124,6 +145,10 @@ class QuestionViewModel(
 
     fun updateRelatedSort(sort : RelatedQuestionSort){
         _questionRelatedState.update { it.copy(sort = sort) }
+    }
+
+    fun updateTagSort(sort : QuestionSort) {
+        _questionTagState.update { it.copy(sort = sort) }
     }
 
     fun setRelatedQuestionId(id : Int) {

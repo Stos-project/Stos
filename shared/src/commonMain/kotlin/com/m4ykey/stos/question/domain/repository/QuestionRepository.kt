@@ -13,6 +13,6 @@ interface QuestionRepository {
     fun getQuestions(sort : String) : Flow<PagingData<QuestionItem>>
     suspend fun getQuestionById(questionId : Int) : Flow<ApiResult<QuestionDetail>>
     fun getQuestionAnswers(questionId : Int) : Flow<PagingData<QuestionAnswer>>
-
     fun getRelatedQuestions(sort: RelatedQuestionSort, questionId: Int) : Flow<PagingData<QuestionItem>>
+    fun getQuestionTag(sort : String, tagged : String) : Flow<PagingData<QuestionItem>>
 }

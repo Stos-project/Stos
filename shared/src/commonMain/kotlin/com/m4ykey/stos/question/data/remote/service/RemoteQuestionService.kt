@@ -4,6 +4,7 @@ import com.m4ykey.stos.core.Filters.QUESTION_ANSWER_FILTER
 import com.m4ykey.stos.core.Filters.QUESTION_DETAIL_FILTER
 import com.m4ykey.stos.core.Filters.QUESTION_HOME_FILTER
 import com.m4ykey.stos.core.model.Items
+import com.m4ykey.stos.core.model.Order
 import com.m4ykey.stos.question.data.remote.model.QuestionAnswerDto
 import com.m4ykey.stos.question.data.remote.model.QuestionDetailDto
 import com.m4ykey.stos.question.data.remote.model.QuestionItemDto
@@ -13,7 +14,7 @@ import com.m4ykey.stos.question.domain.model.RelatedQuestionSort
 interface RemoteQuestionService {
 
     suspend fun getQuestions(
-        order : String = "desc",
+        order : String = Order.DESC.name,
         sort : String,
         site : String = "stackoverflow",
         filter : String = QUESTION_HOME_FILTER,
@@ -32,7 +33,7 @@ interface RemoteQuestionService {
         site : String = "stackoverflow",
         page : Int,
         pageSize : Int,
-        order : String = "desc",
+        order : String = Order.DESC.name,
         sort : QuestionSort = QuestionSort.ACTIVITY,
         filter : String = QUESTION_ANSWER_FILTER
     ) : Items<QuestionAnswerDto>
@@ -41,10 +42,20 @@ interface RemoteQuestionService {
         id : Int,
         page : Int,
         pageSize : Int,
-        order : String = "desc",
+        order : String = Order.DESC.name,
         sort : RelatedQuestionSort = RelatedQuestionSort.ACTIVITY,
         site : String = "stackoverflow",
         filter : String = QUESTION_HOME_FILTER
+    ) : Items<QuestionItemDto>
+
+    suspend fun getQuestionTag(
+        page : Int,
+        pageSize : Int,
+        order : String = Order.DESC.name,
+        sort: String,
+        site : String = "stackoverflow",
+        filter : String = QUESTION_HOME_FILTER,
+        tagged : String
     ) : Items<QuestionItemDto>
 
 }
