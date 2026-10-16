@@ -64,7 +64,8 @@ fun QuestionDetailScreen(
     onRelatedQuestions : (Int) -> Unit,
     questionId : Int,
     viewModel: QuestionViewModel = koinViewModel(),
-    onUserClick: (Int) -> Unit
+    onUserClick: (Int) -> Unit,
+    onTagClick : (String) -> Unit
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
@@ -86,7 +87,8 @@ fun QuestionDetailScreen(
                 state = state,
                 answers = answers,
                 onRetry = { viewModel.onRetryDetailState(questionId) },
-                onUserClick = onUserClick
+                onUserClick = onUserClick,
+                onTagClick = onTagClick
             )
         },
         navigation = {
@@ -125,7 +127,8 @@ fun QuestionDetailContent(
     onRetry : () -> Unit,
     listState : LazyListState,
     answers : LazyPagingItems<QuestionAnswer>,
-    onUserClick: (Int) -> Unit
+    onUserClick: (Int) -> Unit,
+    onTagClick : (String) -> Unit
 ) {
     when {
         state.isLoading -> {
@@ -171,7 +174,9 @@ fun QuestionDetailContent(
                     item {
                         TagListWrap(
                             tags = question.tags,
-                            onTagClick = { tag -> }
+                            onTagClick = { tag ->
+                                onTagClick(tag)
+                            }
                         )
                     }
                     item {

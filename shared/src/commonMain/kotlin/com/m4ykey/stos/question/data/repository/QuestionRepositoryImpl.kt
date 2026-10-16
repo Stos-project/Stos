@@ -9,6 +9,7 @@ import com.m4ykey.stos.question.data.mapper.toQuestionDetail
 import com.m4ykey.stos.question.data.remote.paging.QuestionAnswerPagingSource
 import com.m4ykey.stos.question.data.remote.paging.QuestionPagingSource
 import com.m4ykey.stos.question.data.remote.paging.QuestionRelatedPagingSource
+import com.m4ykey.stos.question.data.remote.paging.QuestionTagPagingSource
 import com.m4ykey.stos.question.data.remote.service.RemoteQuestionService
 import com.m4ykey.stos.question.domain.model.QuestionAnswer
 import com.m4ykey.stos.question.domain.model.QuestionDetail
@@ -68,6 +69,18 @@ class QuestionRepositoryImpl(
             config = pagingConfig,
             pagingSourceFactory = {
                 QuestionRelatedPagingSource(service = service, id = questionId, sort = sort)
+            }
+        ).flow
+    }
+
+    override fun getQuestionTag(
+        sort: String,
+        tagged: String
+    ): Flow<PagingData<QuestionItem>> {
+        return Pager(
+            config = pagingConfig,
+            pagingSourceFactory = {
+                QuestionTagPagingSource(service = service, tagged = tagged, sort = sort)
             }
         ).flow
     }

@@ -81,7 +81,7 @@ class QuestionService(private val client : HttpClient) : RemoteQuestionService {
         filter: String
     ): Items<QuestionItemDto> {
         return client.get {
-            url{
+            url {
                 appendPathSegments("questions/$id/related")
                 parameter("site", site)
                 parameter("page", page)
@@ -89,6 +89,29 @@ class QuestionService(private val client : HttpClient) : RemoteQuestionService {
                 parameter("order", order)
                 parameter("sort", sort)
                 parameter("filter", filter)
+            }
+        }.body()
+    }
+
+    override suspend fun getQuestionTag(
+        page: Int,
+        pageSize: Int,
+        order: String,
+        sort: String,
+        site: String,
+        filter: String,
+        tagged: String
+    ): Items<QuestionItemDto> {
+        return client.get {
+            url {
+                appendPathSegments("questions")
+                parameter("page", page)
+                parameter("page_size", pageSize)
+                parameter("order", order)
+                parameter("sort", sort)
+                parameter("site", site)
+                parameter("filter", filter)
+                parameter("tagged", tagged)
             }
         }.body()
     }
