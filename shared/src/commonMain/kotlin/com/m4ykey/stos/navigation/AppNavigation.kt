@@ -15,6 +15,7 @@ import androidx.savedstate.serialization.SavedStateConfiguration
 import com.m4ykey.stos.question.presentation.QuestionDetailScreen
 import com.m4ykey.stos.question.presentation.QuestionHomeScreen
 import com.m4ykey.stos.question.presentation.QuestionRelatedScreen
+import com.m4ykey.stos.question.presentation.QuestionTagScreen
 import com.m4ykey.stos.search.presentation.SearchListScreen
 import com.m4ykey.stos.search.presentation.SearchScreen
 import com.m4ykey.stos.user.presentation.UserScreen
@@ -34,6 +35,7 @@ fun AppNavigation(modifier : Modifier = Modifier) {
                     subclass(Route.QuestionDetail::class, Route.QuestionDetail.serializer())
                     subclass(Route.UserScreen::class, Route.UserScreen.serializer())
                     subclass(Route.QuestionRelated::class, Route.QuestionRelated.serializer())
+                    subclass(Route.QuestionTag::class, Route.QuestionTag.serializer())
                 }
             }
         },
@@ -110,6 +112,9 @@ fun AppNavigation(modifier : Modifier = Modifier) {
                     },
                     onUserClick = { userId ->
                         navigateTo(Route.UserScreen(userId))
+                    },
+                    onTagClick = { tag ->
+                        navigateTo(Route.QuestionTag(tag))
                     }
                 )
             }
@@ -131,7 +136,19 @@ fun AppNavigation(modifier : Modifier = Modifier) {
                     onOwnerClick = { userId ->
                         navigateTo(Route.UserScreen(userId))
                     },
-                    onBack =  ::navigateBack
+                    onBack = ::navigateBack
+                )
+            }
+            entry<Route.QuestionTag> { key ->
+                QuestionTagScreen(
+                    tagged = key.tag,
+                    onOwnerClick = { userId ->
+                        navigateTo(Route.UserScreen(userId))
+                    },
+                    onQuestionClick = { item ->
+                        navigateTo(Route.QuestionDetail(item))
+                    },
+                    onBack = ::navigateBack
                 )
             }
         }
