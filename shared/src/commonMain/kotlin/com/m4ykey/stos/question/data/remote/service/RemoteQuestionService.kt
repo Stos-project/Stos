@@ -1,11 +1,13 @@
 package com.m4ykey.stos.question.data.remote.service
 
+import com.m4ykey.stos.core.Filters
 import com.m4ykey.stos.core.Filters.QUESTION_ANSWER_FILTER
 import com.m4ykey.stos.core.Filters.QUESTION_DETAIL_FILTER
 import com.m4ykey.stos.core.Filters.QUESTION_HOME_FILTER
 import com.m4ykey.stos.core.model.Items
 import com.m4ykey.stos.core.model.Order
 import com.m4ykey.stos.question.data.remote.model.QuestionAnswerDto
+import com.m4ykey.stos.question.data.remote.model.QuestionCommentsDto
 import com.m4ykey.stos.question.data.remote.model.QuestionDetailDto
 import com.m4ykey.stos.question.data.remote.model.QuestionItemDto
 import com.m4ykey.stos.question.domain.model.QuestionSort
@@ -58,4 +60,13 @@ interface RemoteQuestionService {
         tagged : String
     ) : Items<QuestionItemDto>
 
+    suspend fun getQuestionComments(
+        page : Int,
+        pageSize: Int,
+        order: String = Order.DESC.name,
+        sort: String = "creation",
+        id: Int,
+        filter: String = Filters.QUESTION_COMMENTS,
+        site : String = "stackoverflow"
+    ) : Items<QuestionCommentsDto>
 }

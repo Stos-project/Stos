@@ -1,9 +1,11 @@
 package com.m4ykey.stos.question.data.mapper
 
 import com.m4ykey.stos.question.data.remote.model.QuestionAnswerDto
+import com.m4ykey.stos.question.data.remote.model.QuestionCommentsDto
 import com.m4ykey.stos.question.data.remote.model.QuestionDetailDto
 import com.m4ykey.stos.question.data.remote.model.QuestionItemDto
 import com.m4ykey.stos.question.domain.model.QuestionAnswer
+import com.m4ykey.stos.question.domain.model.QuestionComments
 import com.m4ykey.stos.question.domain.model.QuestionDetail
 import com.m4ykey.stos.question.domain.model.QuestionItem
 import com.m4ykey.stos.user.data.mapper.toOwner
@@ -54,5 +56,16 @@ fun QuestionAnswerDto.toQuestionAnswer() : QuestionAnswer {
         isAccepted = isAccepted,
         bodyMarkdown = bodyMarkdown.orEmpty(),
         owner = owner?.toOwner() ?: Owner.EMPTY
+    )
+}
+
+fun QuestionCommentsDto.toQuestionComment() : QuestionComments{
+    return QuestionComments(
+        owner = owner?.toOwner() ?: Owner.EMPTY,
+        creationDate = creationDate ?: 0,
+        commentId = commentId ?: 0,
+        bodyMarkdown = bodyMarkdown.orEmpty(),
+        body = body.orEmpty(),
+        score = score ?:0
     )
 }
