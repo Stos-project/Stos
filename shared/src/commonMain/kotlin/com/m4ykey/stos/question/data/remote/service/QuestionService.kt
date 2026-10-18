@@ -17,7 +17,6 @@ class QuestionService(private val client : HttpClient) : RemoteQuestionService {
     override suspend fun getQuestions(
         order: String,
         sort: String,
-        site: String,
         filter: String,
         page: Int,
         pageSize: Int
@@ -27,7 +26,6 @@ class QuestionService(private val client : HttpClient) : RemoteQuestionService {
                 appendPathSegments("questions")
                 parameter("order", order)
                 parameter("sort", sort)
-                parameter("site", site)
                 parameter("filter", filter)
                 parameter("page", page)
                 parameter("page_size", pageSize)
@@ -36,14 +34,12 @@ class QuestionService(private val client : HttpClient) : RemoteQuestionService {
     }
 
     override suspend fun getQuestionById(
-        site: String,
         id: Int,
         filter : String
     ): Items<QuestionDetailDto> {
         return client.get {
             url {
                 appendPathSegments("questions/$id")
-                parameter("site", site)
                 parameter("filter", filter)
             }
         }.body()
@@ -51,7 +47,6 @@ class QuestionService(private val client : HttpClient) : RemoteQuestionService {
 
     override suspend fun getQuestionAnswers(
         id: Int,
-        site: String,
         page: Int,
         pageSize: Int,
         order: String,
@@ -61,7 +56,6 @@ class QuestionService(private val client : HttpClient) : RemoteQuestionService {
         return client.get {
             url {
                 appendPathSegments("questions/$id/answers")
-                parameter("site", site)
                 parameter("page", page)
                 parameter("page_size", pageSize)
                 parameter("order", order)
@@ -77,13 +71,11 @@ class QuestionService(private val client : HttpClient) : RemoteQuestionService {
         pageSize: Int,
         order: String,
         sort: RelatedQuestionSort,
-        site: String,
         filter: String
     ): Items<QuestionItemDto> {
         return client.get {
             url {
                 appendPathSegments("questions/$id/related")
-                parameter("site", site)
                 parameter("page", page)
                 parameter("page_size", pageSize)
                 parameter("order", order)
@@ -98,7 +90,6 @@ class QuestionService(private val client : HttpClient) : RemoteQuestionService {
         pageSize: Int,
         order: String,
         sort: String,
-        site: String,
         filter: String,
         tagged: String
     ): Items<QuestionItemDto> {
@@ -109,7 +100,6 @@ class QuestionService(private val client : HttpClient) : RemoteQuestionService {
                 parameter("page_size", pageSize)
                 parameter("order", order)
                 parameter("sort", sort)
-                parameter("site", site)
                 parameter("filter", filter)
                 parameter("tagged", tagged)
             }

@@ -16,21 +16,18 @@ interface RemoteQuestionService {
     suspend fun getQuestions(
         order : String = Order.DESC.name,
         sort : String,
-        site : String = "stackoverflow",
         filter : String = QUESTION_HOME_FILTER,
         page : Int,
         pageSize : Int
     ) : Items<QuestionItemDto>
 
     suspend fun getQuestionById(
-        site : String = "stackoverflow",
         id : Int,
         filter : String = QUESTION_DETAIL_FILTER
     ) : Items<QuestionDetailDto>
 
     suspend fun getQuestionAnswers(
         id : Int,
-        site : String = "stackoverflow",
         page : Int,
         pageSize : Int,
         order : String = Order.DESC.name,
@@ -44,7 +41,6 @@ interface RemoteQuestionService {
         pageSize : Int,
         order : String = Order.DESC.name,
         sort : RelatedQuestionSort = RelatedQuestionSort.ACTIVITY,
-        site : String = "stackoverflow",
         filter : String = QUESTION_HOME_FILTER
     ) : Items<QuestionItemDto>
 
@@ -53,7 +49,6 @@ interface RemoteQuestionService {
         pageSize : Int,
         order : String = Order.DESC.name,
         sort: String,
-        site : String = "stackoverflow",
         filter : String = QUESTION_HOME_FILTER,
         tagged : String
     ) : Items<QuestionItemDto>

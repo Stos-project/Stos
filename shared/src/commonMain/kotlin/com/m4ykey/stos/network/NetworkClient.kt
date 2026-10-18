@@ -1,6 +1,7 @@
 package com.m4ykey.stos.network
 
 import com.m4ykey.stos.shared.BuildKonfig
+import com.m4ykey.stos.sites.data.helpers.SiteManager
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.cio.CIO
@@ -12,9 +13,11 @@ import io.ktor.client.plugins.logging.DEFAULT
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
+import io.ktor.client.request.HttpRequestPipeline
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.URLProtocol
+import io.ktor.client.plugins.compression.ContentEncoding
 import io.ktor.http.contentType
 import io.ktor.http.path
 import io.ktor.serialization.kotlinx.json.json
@@ -28,8 +31,11 @@ object NetworkClient {
 
     fun create(
         enableLogging : Boolean = false,
-        engine : HttpClientEngine = CIO.create()
+        engine : HttpClientEngine = CIO.create(),
+        siteManager: SiteManager
     ) : HttpClient = HttpClient(engine) {
+
+        expectSuccess = true
 
         install(ContentNegotiation) {
             json(
@@ -39,6 +45,11 @@ object NetworkClient {
                     prettyPrint = true
                 }
             )
+        }
+
+        install(ContentEncoding) {
+            gzip()
+            deflate()
         }
 
         if (enableLogging) {
@@ -60,9 +71,24 @@ object NetworkClient {
                 if (pathSegments.isEmpty() || pathSegments.first() != API_VERSION) {
                     path(API_VERSION, "")
                 }
-                parameters.append("key", BuildKonfig.API_KEY)
             }
             contentType(ContentType.Application.Json)
+        }
+
+        install("SiteHeaderPlugin") {
+            requestPipeline.intercept(HttpRequestPipeline.Before) {
+                val url = context.url
+
+                if (!url.parameters.contains("key")) {
+                    url.parameters.append("key", BuildKonfig.API_KEY)
+                }
+
+                val isSitesRequest = url.pathSegments.contains("sites")
+
+                if (!isSitesRequest && !url.parameters.contains("site")) {
+                    url.parameters.append("site", siteManager.selectedSite.value)
+                }
+            }
         }
 
         install(HttpRequestRetry) {

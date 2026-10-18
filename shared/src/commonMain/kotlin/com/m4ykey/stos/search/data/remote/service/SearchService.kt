@@ -14,7 +14,6 @@ class SearchService(private val client : HttpClient) : RemoteSearchService {
     override suspend fun searchQuestions(
         order: String,
         sort: String,
-        site: String,
         filter: String,
         page: Int,
         pageSize: Int,
@@ -25,7 +24,6 @@ class SearchService(private val client : HttpClient) : RemoteSearchService {
                 appendPathSegments("search")
                 parameter("order", order)
                 parameter("sort", sort)
-                parameter("site", site)
                 parameter("filter", filter)
                 parameter("page", page)
                 parameter("page_size", pageSize)
@@ -39,7 +37,6 @@ class SearchService(private val client : HttpClient) : RemoteSearchService {
         pageSize: Int,
         order: String,
         sort: String,
-        site: String,
         filter: String
     ): Items<TagsItemDto> {
         return client.get {
@@ -50,7 +47,6 @@ class SearchService(private val client : HttpClient) : RemoteSearchService {
                 parameter("order", order)
                 parameter("sort", sort)
                 parameter("filter", filter)
-                parameter("site", site)
             }
         }.body()
     }
