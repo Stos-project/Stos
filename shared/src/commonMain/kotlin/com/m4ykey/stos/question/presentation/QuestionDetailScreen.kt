@@ -49,8 +49,10 @@ import org.koin.compose.viewmodel.koinViewModel
 import stos.shared.generated.resources.Res
 import stos.shared.generated.resources.answers
 import stos.shared.generated.resources.back
+import stos.shared.generated.resources.comments
 import stos.shared.generated.resources.ic_arrow_back
 import stos.shared.generated.resources.ic_category
+import stos.shared.generated.resources.ic_comment
 import stos.shared.generated.resources.ic_link
 import stos.shared.generated.resources.last_editor
 import stos.shared.generated.resources.link
@@ -61,11 +63,12 @@ import stos.shared.generated.resources.related_questions
 fun QuestionDetailScreen(
     modifier : Modifier = Modifier,
     onBack : () -> Unit,
-    onRelatedQuestions : (Int) -> Unit,
+    onRelatedQuestionsClick : (Int) -> Unit,
     questionId : Int,
     viewModel: QuestionViewModel = koinViewModel(),
     onUserClick: (Int) -> Unit,
-    onTagClick : (String) -> Unit
+    onTagClick : (String) -> Unit,
+    onCommentsClick : (Int) -> Unit
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
@@ -104,7 +107,7 @@ fun QuestionDetailScreen(
                 text = Res.string.related_questions,
                 onClick = {
                     state.item?.let { question ->
-                        onRelatedQuestions(question.questionId)
+                        onRelatedQuestionsClick(question.questionId)
                     }
                 }
             )
@@ -114,6 +117,15 @@ fun QuestionDetailScreen(
                 onClick = {
                     state.item?.let { url ->
                         openBrowser(url.link)
+                    }
+                }
+            )
+            ActionButton(
+                icon = Res.drawable.ic_comment,
+                text = Res.string.comments,
+                onClick = {
+                    state.item?.let { question ->
+                        onCommentsClick(question.questionId)
                     }
                 }
             )

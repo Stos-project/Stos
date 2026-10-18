@@ -12,6 +12,7 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
+import com.m4ykey.stos.question.presentation.QuestionCommentsScreen
 import com.m4ykey.stos.question.presentation.QuestionDetailScreen
 import com.m4ykey.stos.question.presentation.QuestionHomeScreen
 import com.m4ykey.stos.question.presentation.QuestionRelatedScreen
@@ -36,6 +37,7 @@ fun AppNavigation(modifier : Modifier = Modifier) {
                     subclass(Route.UserScreen::class, Route.UserScreen.serializer())
                     subclass(Route.QuestionRelated::class, Route.QuestionRelated.serializer())
                     subclass(Route.QuestionTag::class, Route.QuestionTag.serializer())
+                    subclass(Route.QuestionComments::class, Route.QuestionComments.serializer())
                 }
             }
         },
@@ -107,7 +109,7 @@ fun AppNavigation(modifier : Modifier = Modifier) {
                 QuestionDetailScreen(
                     onBack = ::navigateBack,
                     questionId = key.questionId,
-                    onRelatedQuestions = { questionId ->
+                    onRelatedQuestionsClick = { questionId ->
                         navigateTo(Route.QuestionRelated(questionId))
                     },
                     onUserClick = { userId ->
@@ -115,6 +117,9 @@ fun AppNavigation(modifier : Modifier = Modifier) {
                     },
                     onTagClick = { tag ->
                         navigateTo(Route.QuestionTag(tag))
+                    },
+                    onCommentsClick = { id ->
+                        navigateTo(Route.QuestionComments(id))
                     }
                 )
             }
@@ -149,6 +154,12 @@ fun AppNavigation(modifier : Modifier = Modifier) {
                         navigateTo(Route.QuestionDetail(item))
                     },
                     onBack = ::navigateBack
+                )
+            }
+            entry <Route.QuestionComments> { key ->
+                QuestionCommentsScreen(
+                    onBack = ::navigateBack,
+                    questionId = key.id
                 )
             }
         }
