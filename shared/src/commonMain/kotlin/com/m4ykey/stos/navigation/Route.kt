@@ -27,4 +27,7 @@ sealed interface Route : NavKey {
     @Serializable
     data class QuestionTag(val tag : String) : Route
 
+    @Serializable
+    data object Sites : Route
+
 }

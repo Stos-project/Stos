@@ -18,6 +18,7 @@ import com.m4ykey.stos.question.presentation.QuestionRelatedScreen
 import com.m4ykey.stos.question.presentation.QuestionTagScreen
 import com.m4ykey.stos.search.presentation.SearchListScreen
 import com.m4ykey.stos.search.presentation.SearchScreen
+import com.m4ykey.stos.sites.presentation.SiteScreen
 import com.m4ykey.stos.user.presentation.UserScreen
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
@@ -36,6 +37,7 @@ fun AppNavigation(modifier : Modifier = Modifier) {
                     subclass(Route.UserScreen::class, Route.UserScreen.serializer())
                     subclass(Route.QuestionRelated::class, Route.QuestionRelated.serializer())
                     subclass(Route.QuestionTag::class, Route.QuestionTag.serializer())
+                    subclass(Route.Sites::class, Route.Sites.serializer())
                 }
             }
         },
@@ -80,6 +82,9 @@ fun AppNavigation(modifier : Modifier = Modifier) {
                     },
                     onQuestionClick = { key ->
                         navigateTo(Route.QuestionDetail(key))
+                    },
+                    onSiteClick = {
+                        navigateTo(Route.Sites)
                     }
                 )
             }
@@ -148,6 +153,11 @@ fun AppNavigation(modifier : Modifier = Modifier) {
                     onQuestionClick = { item ->
                         navigateTo(Route.QuestionDetail(item))
                     },
+                    onBack = ::navigateBack
+                )
+            }
+            entry<Route.Sites> {
+                SiteScreen(
                     onBack = ::navigateBack
                 )
             }
