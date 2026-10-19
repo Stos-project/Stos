@@ -118,7 +118,7 @@ class UserServiceTest {
             assertEquals("desc", parameters["order"])
             assertEquals("activity", parameters["sort"])
             assertEquals("2", parameters["page"])
-            assertEquals("20", parameters["page_size"])
+            assertEquals("20", parameters["pagesize"])
             assertEquals("question-filter", parameters["filter"])
             assertEquals(0, result.items.size)
         }
@@ -162,7 +162,7 @@ class UserServiceTest {
             assertEquals("desc", parameters["order"])
             assertEquals("activity", parameters["sort"])
             assertEquals("2", parameters["page"])
-            assertEquals("20", parameters["page_size"])
+            assertEquals("20", parameters["pagesize"])
             assertEquals("answer-filter", parameters["filter"])
             assertEquals(0, result.items.size)
         }
@@ -224,11 +224,11 @@ class UserServiceTest {
 
             assertEquals("DESC", parameters["order"])
             assertEquals(
-                QuestionSort.ACTIVITY.name,
+                QuestionSort.ACTIVITY.name.lowercase(),
                 parameters["sort"]
             )
             assertEquals("1", parameters["page"])
-            assertEquals("20", parameters["page_size"])
+            assertEquals("20", parameters["pagesize"])
             assertEquals(QUESTION_HOME_FILTER, parameters["filter"])
         }
     }
@@ -264,13 +264,12 @@ class UserServiceTest {
 
             assertEquals("DESC", parameters["order"])
             assertEquals(
-                QuestionSort.ACTIVITY.name,
+                QuestionSort.ACTIVITY.name.lowercase(),
                 parameters["sort"]
             )
             assertEquals("1", parameters["page"])
-            assertEquals("20", parameters["page_size"])
+            assertEquals("20", parameters["pagesize"])
             assertEquals(USER_ANSWER_FILTER, parameters["filter"])
         }
     }
-
 }
