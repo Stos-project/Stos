@@ -4,6 +4,6 @@ import org.koin.dsl.module
 
 val networkModule = module {
 
-    single { NetworkClient.create() }
+    single { NetworkClient.create(siteManager = get()) }
 
 }

@@ -29,5 +29,6 @@ sealed interface Route : NavKey {
 
     @Serializable
     data class QuestionComments(val id : Int) : Route
+    data object Sites : Route
 
 }

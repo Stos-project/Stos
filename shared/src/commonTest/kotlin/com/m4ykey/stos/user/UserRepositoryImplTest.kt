@@ -33,7 +33,6 @@ class UserRepositoryImplTest {
 
         override suspend fun getUserById(
             filter: String,
-            site: String,
             id: Int
         ): Items<OwnerDto> {
             userError?.let { throw it }
@@ -41,7 +40,6 @@ class UserRepositoryImplTest {
         }
 
         override suspend fun getUserQuestions(
-            site: String,
             id: Int,
             order: String,
             sort: String,
@@ -53,7 +51,6 @@ class UserRepositoryImplTest {
         }
 
         override suspend fun getUserAnswers(
-            site: String,
             id: Int,
             order: String,
             sort: String,

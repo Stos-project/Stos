@@ -27,14 +27,12 @@ class FakeRemoteUserServicePaging(
 
     override suspend fun getUserById(
         filter: String,
-        site: String,
         id: Int
     ): Items<OwnerDto> {
         return Items(items = emptyList())
     }
 
     override suspend fun getUserQuestions(
-        site: String,
         id: Int,
         order: String,
         sort: String,
@@ -54,7 +52,6 @@ class FakeRemoteUserServicePaging(
     }
 
     override suspend fun getUserAnswers(
-        site: String,
         id: Int,
         order: String,
         sort: String,

@@ -11,4 +11,5 @@ object Filters {
     const val QUESTION_COMMENTS = "!BcXmil5wTD4pXJ*bp09ngCBhO.0KCe7rO"
 
 
+    const val SITES_FILTER = "!BH*s)gJOH5dUQqo6BHU0UVMhGQDtp4"
 }

@@ -17,6 +17,7 @@ import com.m4ykey.stos.question.presentation.state.QuestionDetailState
 import com.m4ykey.stos.question.presentation.state.QuestionRelatedState
 import com.m4ykey.stos.question.presentation.state.QuestionState
 import com.m4ykey.stos.question.presentation.state.QuestionTagState
+import com.m4ykey.stos.sites.data.helpers.SiteManager
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
@@ -33,7 +34,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class QuestionViewModel(
-    private val repository : QuestionRepository
+    private val repository : QuestionRepository,
+    siteManager: SiteManager
 ) : ViewModel() {
 
     private val _questionState = MutableStateFlow(QuestionState())
@@ -56,6 +58,8 @@ class QuestionViewModel(
     private val taggedName = MutableStateFlow<String?>(null)
 
     private var detailJob : Job? = null
+
+    private val site = siteManager.selectedSite
 
     fun getQuestionDetail(questionId : Int) {
         detailJob?.cancel()
@@ -92,8 +96,10 @@ class QuestionViewModel(
         getQuestionDetail(questionId)
     }
 
-    private val answersFlow : Flow<PagingData<QuestionAnswer>> = answersQuestionId
-        .filterNotNull()
+    private val answersFlow : Flow<PagingData<QuestionAnswer>> = combine(
+        answersQuestionId.filterNotNull(),
+        site
+    ) { id, _ -> id }
         .distinctUntilChanged()
         .flatMapLatest { id ->
             repository.getQuestionAnswers(id)
@@ -111,6 +117,10 @@ class QuestionViewModel(
     private val questionFlow : Flow<PagingData<QuestionItem>> = _questionState
         .map { it.sort }
         .distinctUntilChanged()
+    private val questionFlow : Flow<PagingData<QuestionItem>> = combine(
+        _questionState.map { it.sort }.distinctUntilChanged(),
+        site
+    ) { sort, _ -> sort }
         .flatMapLatest { sort ->
             repository.getQuestions(sort = sort.name)
         }
@@ -118,8 +128,9 @@ class QuestionViewModel(
 
     private val relatedQuestionsFlow : Flow<PagingData<QuestionItem>> = combine(
         relatedQuestionId.filterNotNull(),
-        _questionRelatedState.map { it.sort }.distinctUntilChanged()
-    ) { id, sort -> id to sort }
+        _questionRelatedState.map { it.sort }.distinctUntilChanged(),
+        site
+    ) { id, sort, _ -> id to sort }
         .flatMapLatest { (id, sort) ->
             repository.getRelatedQuestions(sort = sort, questionId = id)
         }
@@ -127,8 +138,9 @@ class QuestionViewModel(
 
     private val tagQuestionFlow : Flow<PagingData<QuestionItem>> = combine(
         taggedName.filterNotNull(),
-        _questionTagState.map { it.sort }.distinctUntilChanged()
-    ) { tag, sort -> tag to sort }
+        _questionTagState.map { it.sort }.distinctUntilChanged(),
+        site
+    ) { tag, sort, _ -> tag to sort }
         .flatMapLatest { (tag, sort) ->
             repository.getQuestionTag(sort = sort.name, tagged = tag)
         }

@@ -1,6 +1,7 @@
 package com.m4ykey.stos.user.data.remote.service
 
 import com.m4ykey.stos.core.model.Items
+import com.m4ykey.stos.core.network.pagedParameters
 import com.m4ykey.stos.question.data.remote.model.QuestionItemDto
 import com.m4ykey.stos.user.data.remote.model.AnswerItemDto
 import com.m4ykey.stos.user.data.remote.model.OwnerDto
@@ -14,20 +15,17 @@ class UserService(private val client : HttpClient) : RemoteUserService {
 
     override suspend fun getUserById(
         filter: String,
-        site: String,
         id: Int
     ): Items<OwnerDto> {
         return client.get {
             url {
                 appendPathSegments("users/$id")
                 parameter("filter", filter)
-                parameter("site", site)
             }
         }.body()
     }
 
     override suspend fun getUserQuestions(
-        site: String,
         id: Int,
         order: String,
         sort: String,
@@ -36,20 +34,12 @@ class UserService(private val client : HttpClient) : RemoteUserService {
         pageSize: Int
     ): Items<QuestionItemDto> {
         return client.get {
-            url {
-                appendPathSegments("users/$id/questions")
-                parameter("site", site)
-                parameter("order", order)
-                parameter("sort", sort)
-                parameter("page", page)
-                parameter("page_size", pageSize)
-                parameter("filter", filter)
-            }
+            url { appendPathSegments("users/$id/questions") }
+            pagedParameters(page, pageSize, filter, order, sort)
         }.body()
     }
 
     override suspend fun getUserAnswers(
-        site: String,
         id: Int,
         order: String,
         sort: String,
@@ -58,15 +48,8 @@ class UserService(private val client : HttpClient) : RemoteUserService {
         filter: String
     ) : Items<AnswerItemDto> {
         return client.get {
-            url {
-                appendPathSegments("users/$id/answers")
-                parameter("site", site)
-                parameter("order", order)
-                parameter("sort", sort)
-                parameter("page", page)
-                parameter("page_size", pageSize)
-                parameter("filter", filter)
-            }
+            url { appendPathSegments("users/$id/answers") }
+            pagedParameters(page, pageSize, filter, order, sort)
         }.body()
     }
 

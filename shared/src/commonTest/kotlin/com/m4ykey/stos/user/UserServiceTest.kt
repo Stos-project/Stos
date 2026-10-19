@@ -50,12 +50,10 @@ class UserServiceTest {
     @Test
     fun `getUserById sends correct endpoint and parameters`() = runTest {
         var path = ""
-        var site : String? = null
         var filter : String? = null
 
         val engine = MockEngine { request ->
             path = request.url.encodedPath
-            site = request.url.parameters["site"]
             filter = request.url.parameters["filter"]
 
             respond(
@@ -72,12 +70,10 @@ class UserServiceTest {
 
             val result = service.getUserById(
                 id = 123,
-                site = "stackoverflow",
                 filter = "user-filter"
             )
 
             assertEquals("/users/123", path)
-            assertEquals("stackoverflow", site)
             assertEquals("user-filter", filter)
             assertEquals(0, result.items.size)
             assertEquals(false, result.has_more)
@@ -111,7 +107,6 @@ class UserServiceTest {
 
             val result = service.getUserQuestions(
                 id = 123,
-                site = "stackoverflow",
                 filter = "question-filter",
                 order = "desc",
                 sort = "activity",
@@ -120,11 +115,10 @@ class UserServiceTest {
             )
 
             assertEquals("/users/123/questions", path)
-            assertEquals("stackoverflow", parameters["site"])
             assertEquals("desc", parameters["order"])
             assertEquals("activity", parameters["sort"])
             assertEquals("2", parameters["page"])
-            assertEquals("20", parameters["page_size"])
+            assertEquals("20", parameters["pagesize"])
             assertEquals("question-filter", parameters["filter"])
             assertEquals(0, result.items.size)
         }
@@ -157,7 +151,6 @@ class UserServiceTest {
 
             val result = service.getUserAnswers(
                 id = 456,
-                site = "stackoverflow",
                 filter = "answer-filter",
                 order = "desc",
                 sort = "activity",
@@ -166,11 +159,10 @@ class UserServiceTest {
             )
 
             assertEquals("/users/456/answers", path)
-            assertEquals("stackoverflow", parameters["site"])
             assertEquals("desc", parameters["order"])
             assertEquals("activity", parameters["sort"])
             assertEquals("2", parameters["page"])
-            assertEquals("20", parameters["page_size"])
+            assertEquals("20", parameters["pagesize"])
             assertEquals("answer-filter", parameters["filter"])
             assertEquals(0, result.items.size)
         }
@@ -178,11 +170,9 @@ class UserServiceTest {
 
     @Test
     fun `getUserById uses default parameters`() = runTest {
-        var site : String? = null
         var filter : String? = null
 
         val engine = MockEngine { request ->
-            site = request.url.parameters["site"]
             filter = request.url.parameters["filter"]
 
             respond(
@@ -199,9 +189,7 @@ class UserServiceTest {
 
             service.getUserById(id = 123)
 
-            assertEquals("stackoverflow", site)
-            assertNotNull(filter)
-            assertNotNull(USER_FILTER, filter)
+            assertEquals(USER_FILTER, filter)
         }
     }
 
@@ -234,14 +222,13 @@ class UserServiceTest {
                 id = 123
             )
 
-            assertEquals("stackoverflow", parameters["site"])
-            assertEquals("desc", parameters["order"])
+            assertEquals("DESC", parameters["order"])
             assertEquals(
-                QuestionSort.ACTIVITY.name,
+                QuestionSort.ACTIVITY.name.lowercase(),
                 parameters["sort"]
             )
             assertEquals("1", parameters["page"])
-            assertEquals("20", parameters["page_size"])
+            assertEquals("20", parameters["pagesize"])
             assertEquals(QUESTION_HOME_FILTER, parameters["filter"])
         }
     }
@@ -275,16 +262,14 @@ class UserServiceTest {
                 id = 123
             )
 
-            assertEquals("stackoverflow", parameters["site"])
-            assertEquals("desc", parameters["order"])
+            assertEquals("DESC", parameters["order"])
             assertEquals(
-                QuestionSort.ACTIVITY.name,
+                QuestionSort.ACTIVITY.name.lowercase(),
                 parameters["sort"]
             )
             assertEquals("1", parameters["page"])
-            assertEquals("20", parameters["page_size"])
+            assertEquals("20", parameters["pagesize"])
             assertEquals(USER_ANSWER_FILTER, parameters["filter"])
         }
     }
-
 }

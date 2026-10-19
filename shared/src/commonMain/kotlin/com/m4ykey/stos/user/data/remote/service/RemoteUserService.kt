@@ -4,6 +4,7 @@ import com.m4ykey.stos.core.Filters.QUESTION_HOME_FILTER
 import com.m4ykey.stos.core.Filters.USER_ANSWER_FILTER
 import com.m4ykey.stos.core.Filters.USER_FILTER
 import com.m4ykey.stos.core.model.Items
+import com.m4ykey.stos.core.model.Order
 import com.m4ykey.stos.question.data.remote.model.QuestionItemDto
 import com.m4ykey.stos.question.domain.model.QuestionSort
 import com.m4ykey.stos.user.data.remote.model.AnswerItemDto
@@ -13,14 +14,12 @@ interface RemoteUserService {
 
     suspend fun getUserById(
         filter : String = USER_FILTER,
-        site : String = "stackoverflow",
         id : Int
     ) : Items<OwnerDto>
 
     suspend fun getUserQuestions(
-        site : String = "stackoverflow",
         id : Int,
-        order : String = "desc",
+        order : String = Order.DESC.name,
         sort : String = QuestionSort.ACTIVITY.name,
         page : Int,
         filter : String = QUESTION_HOME_FILTER,
@@ -28,9 +27,8 @@ interface RemoteUserService {
     ) : Items<QuestionItemDto>
 
     suspend fun getUserAnswers(
-        site : String = "stackoverflow",
         id : Int,
-        order : String = "desc",
+        order : String = Order.DESC.name,
         sort: String = QuestionSort.ACTIVITY.name,
         page : Int,
         pageSize: Int,
