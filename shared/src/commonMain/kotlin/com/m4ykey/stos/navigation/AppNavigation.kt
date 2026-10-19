@@ -168,6 +168,8 @@ fun AppNavigation(modifier : Modifier = Modifier) {
                     onOwnerClick = { userId ->
                         navigateTo(Route.UserScreen(userId))
                     }
+                )
+            }
             entry<Route.Sites> {
                 SiteScreen(
                     onBack = ::navigateBack

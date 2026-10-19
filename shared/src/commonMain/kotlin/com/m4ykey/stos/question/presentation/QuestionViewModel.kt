@@ -114,9 +114,6 @@ class QuestionViewModel(
         }
         .cachedIn(viewModelScope)
 
-    private val questionFlow : Flow<PagingData<QuestionItem>> = _questionState
-        .map { it.sort }
-        .distinctUntilChanged()
     private val questionFlow : Flow<PagingData<QuestionItem>> = combine(
         _questionState.map { it.sort }.distinctUntilChanged(),
         site
