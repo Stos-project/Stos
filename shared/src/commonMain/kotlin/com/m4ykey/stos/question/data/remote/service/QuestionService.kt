@@ -1,6 +1,7 @@
 package com.m4ykey.stos.question.data.remote.service
 
 import com.m4ykey.stos.core.model.Items
+import com.m4ykey.stos.core.network.pagedParameters
 import com.m4ykey.stos.question.data.remote.model.QuestionAnswerDto
 import com.m4ykey.stos.question.data.remote.model.QuestionDetailDto
 import com.m4ykey.stos.question.data.remote.model.QuestionItemDto
@@ -22,14 +23,8 @@ class QuestionService(private val client : HttpClient) : RemoteQuestionService {
         pageSize: Int
     ): Items<QuestionItemDto> {
         return client.get {
-            url {
-                appendPathSegments("questions")
-                parameter("order", order)
-                parameter("sort", sort)
-                parameter("filter", filter)
-                parameter("page", page)
-                parameter("page_size", pageSize)
-            }
+            url { appendPathSegments("questions") }
+            pagedParameters(page, pageSize, filter, order, sort)
         }.body()
     }
 
@@ -54,14 +49,8 @@ class QuestionService(private val client : HttpClient) : RemoteQuestionService {
         filter: String
     ): Items<QuestionAnswerDto> {
         return client.get {
-            url {
-                appendPathSegments("questions/$id/answers")
-                parameter("page", page)
-                parameter("page_size", pageSize)
-                parameter("order", order)
-                parameter("sort", sort)
-                parameter("filter", filter)
-            }
+            url { appendPathSegments("questions/$id/answers") }
+            pagedParameters(page, pageSize, filter, order, sort.name)
         }.body()
     }
 
@@ -74,14 +63,8 @@ class QuestionService(private val client : HttpClient) : RemoteQuestionService {
         filter: String
     ): Items<QuestionItemDto> {
         return client.get {
-            url {
-                appendPathSegments("questions/$id/related")
-                parameter("page", page)
-                parameter("page_size", pageSize)
-                parameter("order", order)
-                parameter("sort", sort)
-                parameter("filter", filter)
-            }
+            url { appendPathSegments("questions/$id/related") }
+            pagedParameters(page, pageSize, filter, order, sort.name)
         }.body()
     }
 
@@ -94,15 +77,9 @@ class QuestionService(private val client : HttpClient) : RemoteQuestionService {
         tagged: String
     ): Items<QuestionItemDto> {
         return client.get {
-            url {
-                appendPathSegments("questions")
-                parameter("page", page)
-                parameter("page_size", pageSize)
-                parameter("order", order)
-                parameter("sort", sort)
-                parameter("filter", filter)
-                parameter("tagged", tagged)
-            }
+            url { appendPathSegments("questions") }
+            parameter("tagged", tagged)
+            pagedParameters(page, pageSize, filter, order, sort)
         }.body()
     }
 }
