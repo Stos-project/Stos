@@ -18,6 +18,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
@@ -27,6 +28,8 @@ import com.m4ykey.stos.core.ui.AppScaffold
 import com.m4ykey.stos.core.ui.ErrorItem
 import com.m4ykey.stos.core.ui.FloatingActionArrowUp
 import com.m4ykey.stos.core.ui.LoadingItem
+import com.m4ykey.stos.question.presentation.components.CommentItem
+import org.koin.compose.viewmodel.koinViewModel
 import stos.shared.generated.resources.Res
 import stos.shared.generated.resources.back
 import stos.shared.generated.resources.ic_arrow_back
@@ -35,7 +38,9 @@ import stos.shared.generated.resources.ic_arrow_back
 fun QuestionCommentsScreen(
     modifier: Modifier = Modifier,
     onBack : () -> Unit,
-    questionId : Int
+    questionId : Int,
+    viewModel: QuestionViewModel = koinViewModel (),
+    onOwnerClick : (Int) -> Unit,
 ){
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val listState = rememberLazyListState()
@@ -49,6 +54,12 @@ fun QuestionCommentsScreen(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         scrollBehavior = scrollBehavior,
         content = {
+            QuestionCommentsContent(
+                viewModel = viewModel,
+                questionId = questionId,
+                listState = listState,
+                onOwnerClick = onOwnerClick
+            )
         },
         navigation = {
             ActionButton(
@@ -106,6 +117,16 @@ fun QuestionCommentsContent(
                     val comment = items[index]
 
                     comment?.let { item ->
+                        CommentItem(
+                            onOwnerClick = onOwnerClick,
+                            userId = item.owner.userId,
+                            userProfile = item.owner.profileImage,
+                            displayName = item.owner.displayName,
+                            reputation = item.owner.reputation,
+                            badgeCounts = item.owner.badgeCounts,
+                            text = item.bodyMarkdown,
+                            date = item.creationDate.toLong()
+                        )
                     }
 
                 }

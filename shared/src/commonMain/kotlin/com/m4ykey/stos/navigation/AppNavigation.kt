@@ -159,7 +159,10 @@ fun AppNavigation(modifier : Modifier = Modifier) {
             entry <Route.QuestionComments> { key ->
                 QuestionCommentsScreen(
                     onBack = ::navigateBack,
-                    questionId = key.id
+                    questionId = key.id,
+                    onOwnerClick = { userId ->
+                        navigateTo(Route.UserScreen(userId))
+                    }
                 )
             }
         }
