@@ -11,17 +11,29 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.Icon
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.NavigationDrawerItemDefaults
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -36,13 +48,21 @@ import com.m4ykey.stos.core.ui.AppScaffold
 import com.m4ykey.stos.core.ui.ErrorItem
 import com.m4ykey.stos.core.ui.FloatingActionArrowUp
 import com.m4ykey.stos.core.ui.LoadingItem
+import com.m4ykey.stos.question.domain.model.DrawerItem
 import com.m4ykey.stos.question.domain.model.QuestionSort
 import com.m4ykey.stos.question.presentation.components.ChipList
 import com.m4ykey.stos.question.presentation.components.QuestionListItem
+import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import stos.shared.generated.resources.Res
+import stos.shared.generated.resources.ic_menu
 import stos.shared.generated.resources.ic_search
+import stos.shared.generated.resources.ic_site
+import stos.shared.generated.resources.menu
 import stos.shared.generated.resources.search
+import stos.shared.generated.resources.site
 
 @Composable
 fun QuestionHomeScreen(
@@ -50,7 +70,8 @@ fun QuestionHomeScreen(
     onSearchClick : () -> Unit,
     viewModel: QuestionViewModel = koinViewModel(),
     onQuestionClick: (Int) -> Unit,
-    onOwnerClick: (Int) -> Unit
+    onOwnerClick: (Int) -> Unit,
+    onSiteClick : () -> Unit
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
@@ -63,37 +84,91 @@ fun QuestionHomeScreen(
         }
     }
 
-    AppScaffold(
-        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        scrollBehavior = scrollBehavior,
-        floatingActionButton = {
-            AnimatedVisibility(
-                visible = showScrollByPosition,
-                enter = slideInHorizontally { it },
-                exit = slideOutHorizontally { it }
-            ) {
-                FloatingActionArrowUp(
-                    coroutineScope = coroutineScope,
-                    listState = listState
-                )
+    val items = remember {
+        listOf(
+            DrawerItem(
+                onClick = { onSiteClick() },
+                title = Res.string.site,
+                icon = Res.drawable.ic_site
+            )
+        )
+    }
+
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+
+    var selectedItemIndex by rememberSaveable { mutableIntStateOf(-1) }
+
+    ModalNavigationDrawer(
+        drawerContent = {
+            ModalDrawerSheet(modifier = Modifier.width(300.dp)) {
+                Spacer(modifier = Modifier.height(16.dp))
+                items.forEachIndexed { index, item ->
+                    NavigationDrawerItem(
+                        label = { Text(text = stringResource(item.title)) },
+                        selected = index == selectedItemIndex,
+                        onClick = {
+                            coroutineScope.launch {
+                                drawerState.close()
+                                selectedItemIndex = -1
+                            }
+                            item.onClick()
+                        },
+                        modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
+                        icon = {
+                            Icon(
+                                painter = painterResource(item.icon),
+                                contentDescription = stringResource(item.title)
+                            )
+                        }
+                    )
+                }
             }
         },
-        actions = {
-            ActionButton(
-                onClick = onSearchClick,
-                icon = Res.drawable.ic_search,
-                text = Res.string.search
-            )
-        },
-        content = {
-            QuestionContent(
-                viewModel = viewModel,
-                onQuestionClick = onQuestionClick,
-                onOwnerClick = onOwnerClick,
-                listState = listState
-            )
-        }
-    )
+        drawerState = drawerState
+    ) {
+        AppScaffold(
+            modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+            scrollBehavior = scrollBehavior,
+            floatingActionButton = {
+                AnimatedVisibility(
+                    visible = showScrollByPosition,
+                    enter = slideInHorizontally { it },
+                    exit = slideOutHorizontally { it }
+                ) {
+                    FloatingActionArrowUp(
+                        coroutineScope = coroutineScope,
+                        listState = listState
+                    )
+                }
+            },
+            actions = {
+                ActionButton(
+                    onClick = onSearchClick,
+                    icon = Res.drawable.ic_search,
+                    text = Res.string.search
+                )
+            },
+            content = {
+                QuestionContent(
+                    viewModel = viewModel,
+                    onQuestionClick = onQuestionClick,
+                    onOwnerClick = onOwnerClick,
+                    listState = listState
+                )
+            },
+            navigation = {
+                ActionButton(
+                    icon = Res.drawable.ic_menu,
+                    text = Res.string.menu,
+                    onClick = {
+                        coroutineScope.launch {
+                            drawerState.open()
+                        }
+                    }
+                )
+            }
+        )
+    }
 }
 
 @Composable

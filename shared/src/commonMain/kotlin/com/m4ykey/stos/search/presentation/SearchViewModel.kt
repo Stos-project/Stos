@@ -11,6 +11,7 @@ import com.m4ykey.stos.search.domain.model.SearchSort
 import com.m4ykey.stos.search.domain.model.TagsItem
 import com.m4ykey.stos.search.domain.repository.SearchRepository
 import com.m4ykey.stos.search.presentation.state.SearchQuestionState
+import com.m4ykey.stos.sites.data.helpers.SiteManager
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
@@ -25,15 +26,18 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 
 class SearchViewModel(
-    private val repository : SearchRepository
+    private val repository : SearchRepository,
+    siteManager: SiteManager
 ) : ViewModel() {
 
     private val _searchState = MutableStateFlow(SearchQuestionState())
     val searchState = _searchState.asStateFlow()
 
-    val tagFlow : Flow<PagingData<TagsItem>> =
-        repository.getSearchTags()
-            .cachedIn(viewModelScope)
+    private val site = siteManager.selectedSite
+
+    val tagFlow : Flow<PagingData<TagsItem>> = site
+        .flatMapLatest { repository.getSearchTags() }
+        .cachedIn(viewModelScope)
 
     private val searchFlow : Flow<PagingData<QuestionItem>> = combine(
         _searchState
@@ -42,8 +46,9 @@ class SearchViewModel(
             .debounce { query -> if (query.isEmpty()) 0L else 300L },
         _searchState
             .map { it.sort }
-            .distinctUntilChanged()
-    ) { query, sort -> query to sort }
+            .distinctUntilChanged(),
+        site
+    ) { query, sort, _ -> query to sort }
         .flatMapLatest { (query, sort) ->
             if (query.isEmpty()) {
                 flowOf(PagingData.empty())

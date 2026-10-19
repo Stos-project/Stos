@@ -23,4 +23,6 @@
     <string name="last_editor">Last edited by</string>
     <string name="no_answers">No Answers</string>
     <string name="rank">Rank</string>
+    <string name="site">Site</string>
+    <string name="menu">Menu</string>
 </resources>

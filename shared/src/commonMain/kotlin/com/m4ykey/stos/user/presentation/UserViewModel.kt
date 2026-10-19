@@ -8,6 +8,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.m4ykey.stos.core.network.ApiResult
+import com.m4ykey.stos.sites.data.helpers.SiteManager
 import com.m4ykey.stos.user.domain.model.UserProfileItem
 import com.m4ykey.stos.user.domain.model.UserProfileItems
 import com.m4ykey.stos.user.domain.repository.UserRepository
@@ -29,7 +30,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class UserViewModel(
-    private val repository: UserRepository
+    private val repository: UserRepository,
+    siteManager: SiteManager
 ) : ViewModel() {
 
     private val _userState = MutableStateFlow(UserState())
@@ -41,6 +43,8 @@ class UserViewModel(
     private val _userId = MutableStateFlow<Int?>(null)
 
     private var userJob : Job? = null
+
+    private val site = siteManager.selectedSite
 
     fun getUserById(userId : Int) {
         userJob?.cancel()
@@ -73,8 +77,9 @@ class UserViewModel(
     val userQuestionItems : Flow<PagingData<UserProfileItem>> =
         combine(
             _userId,
-            _userSortState.map { it.sort }.distinctUntilChanged()
-        ) { userId, sort ->
+            _userSortState.map { it.sort }.distinctUntilChanged(),
+            site
+        ) { userId, sort, _ ->
             userId to sort
         }.flatMapLatest { (userId, sort) ->
             when {
