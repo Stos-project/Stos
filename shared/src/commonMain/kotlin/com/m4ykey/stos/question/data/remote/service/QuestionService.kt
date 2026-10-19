@@ -3,6 +3,7 @@ package com.m4ykey.stos.question.data.remote.service
 import com.m4ykey.stos.core.model.Items
 import com.m4ykey.stos.core.network.pagedParameters
 import com.m4ykey.stos.question.data.remote.model.QuestionAnswerDto
+import com.m4ykey.stos.question.data.remote.model.QuestionCommentsDto
 import com.m4ykey.stos.question.data.remote.model.QuestionDetailDto
 import com.m4ykey.stos.question.data.remote.model.QuestionItemDto
 import com.m4ykey.stos.question.domain.model.QuestionSort
@@ -80,6 +81,29 @@ class QuestionService(private val client : HttpClient) : RemoteQuestionService {
             url { appendPathSegments("questions") }
             parameter("tagged", tagged)
             pagedParameters(page, pageSize, filter, order, sort)
+        }.body()
+    }
+
+    override suspend fun getQuestionComments(
+        page: Int,
+        pageSize: Int,
+        order: String,
+        sort: String,
+        id: Int,
+        filter: String,
+        site: String
+    ): Items<QuestionCommentsDto> {
+        return client.get {
+            url {
+                appendPathSegments("questions/$id/comments")
+                parameter("page",page)
+                parameter("page_size",pageSize)
+                parameter("order",order)
+                parameter("sort",sort)
+                parameter("id",id)
+                parameter("filter",filter)
+                parameter("site",site)
+            }
         }.body()
     }
 }

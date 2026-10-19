@@ -8,6 +8,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.m4ykey.stos.core.network.ApiResult
 import com.m4ykey.stos.question.domain.model.QuestionAnswer
+import com.m4ykey.stos.question.domain.model.QuestionComments
 import com.m4ykey.stos.question.domain.model.QuestionItem
 import com.m4ykey.stos.question.domain.model.QuestionSort
 import com.m4ykey.stos.question.domain.model.RelatedQuestionSort
@@ -51,6 +52,8 @@ class QuestionViewModel(
 
     private val relatedQuestionId = MutableStateFlow<Int?>(null)
     private val answersQuestionId = MutableStateFlow<Int?>(null)
+
+    private val commentsId = MutableStateFlow<Int?>(null)
 
     private val taggedName = MutableStateFlow<String?>(null)
 
@@ -103,6 +106,17 @@ class QuestionViewModel(
         }
         .cachedIn(viewModelScope)
 
+    private val questionCommentsFlow : Flow<PagingData<QuestionComments>> = commentsId
+        .filterNotNull()
+        .distinctUntilChanged()
+        .flatMapLatest { id ->
+            repository.getQuestionComments(id)
+        }
+        .cachedIn(viewModelScope)
+
+    private val questionFlow : Flow<PagingData<QuestionItem>> = _questionState
+        .map { it.sort }
+        .distinctUntilChanged()
     private val questionFlow : Flow<PagingData<QuestionItem>> = combine(
         _questionState.map { it.sort }.distinctUntilChanged(),
         site
@@ -140,12 +154,18 @@ class QuestionViewModel(
 
     fun getQuestionAnswers() : Flow<PagingData<QuestionAnswer>> = answersFlow
 
+    fun getQuestionComments() : Flow<PagingData<QuestionComments>> = questionCommentsFlow
+
     fun setTag(tag : String) {
         taggedName.value = tag
     }
 
     fun setAnswersQuestionId(id : Int) {
         answersQuestionId.value = id
+    }
+
+    fun setQuestionCommentsId(id : Int){
+        commentsId.value = id
     }
 
     fun updateSort(sort : QuestionSort) {
