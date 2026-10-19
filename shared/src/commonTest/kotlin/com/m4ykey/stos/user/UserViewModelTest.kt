@@ -4,6 +4,7 @@ package com.m4ykey.stos.user
 
 import com.m4ykey.stos.core.network.ApiException
 import com.m4ykey.stos.core.network.ApiResult
+import com.m4ykey.stos.sites.data.helpers.SiteManager
 import com.m4ykey.stos.user.domain.model.Owner
 import com.m4ykey.stos.user.domain.model.UserProfileItems
 import com.m4ykey.stos.user.presentation.UserViewModel
@@ -33,10 +34,12 @@ class UserViewModelTest {
 
     private lateinit var viewModel : UserViewModel
     private lateinit var repository : FakeUserRepository
+    private lateinit var siteManager : SiteManager
 
     private fun createViewModel() {
         repository = FakeUserRepository()
-        viewModel = UserViewModel(repository)
+        siteManager = SiteManager()
+        viewModel = UserViewModel(repository, siteManager)
     }
 
     @AfterTest
