@@ -15,3 +15,11 @@ you solve your programming problems using **StackExchange** and **StackOverflow*
 | Android        | Supported |
 | Desktop (JVM)  | Supported |
 | IOS            | Not yet   |
+
+## Project Setup
+1. Clone repository and open in the latest version of Android Studio
+2. Create ```local.properties``` file
+3. Add your [StackExchange](https://api.stackexchange.com/docs) key:
+```
+k=YOUR_KEY
+```
