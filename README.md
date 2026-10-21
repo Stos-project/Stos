@@ -8,6 +8,19 @@ you solve your programming problems using **StackExchange** and **StackOverflow*
 - Readable rendering of posts, including formatted text and code
 - One shared codebase for Android and Desktop built with Compose Multiplatform
 
+## Screenshots
+| Home                                               | Search                                              | 
+|----------------------------------------------------|-----------------------------------------------------|
+| ![Home](screenshots/android/question_home.png)     | ![Search](screenshots/android/search.png)           |
+
+| Detail                                             | Search List                                         |
+| ------------------------------------------------   | -------------------------------------------         |
+| ![Detail](screenshots/android/question_detail.png) | ![Search List](screenshots/android/search_list.png) |
+
+| User                                               |
+| ------------------------------------------------   |
+| ![User](screenshots/android/user.png)              |
+
 ## Supported Platforms
 
 | Platform       | Status    |
