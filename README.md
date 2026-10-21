@@ -1,30 +1,17 @@
-This is a Kotlin Multiplatform project targeting Android, Desktop (JVM).
+## Stos
 
-* [/shared](./shared/src) is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
-  - [commonMain](./shared/src/commonMain/kotlin) is for code that’s common for all targets.
-  - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
-    For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
-    the [iosMain](./shared/src/iosMain/kotlin) folder would be the right place for such calls.
-    Similarly, if you want to edit the Desktop (JVM) specific part, the [jvmMain](./shared/src/jvmMain/kotlin)
-    folder is the appropriate location.
+Stos is a cross-platform application (Android and Desktop) built with **Kotlin Multiplatform** that helps
+you solve your programming problems using **StackExchange** and **StackOverflow**.
 
-### Running the apps
+## Features
+- Browse and search questions and answers from StackOverflow and other StackExchange sites
+- Readable rendering of posts, including formatted text and code
+- One shared codebase for Android and Desktop built with Compose Multiplatform
 
-Use the run configurations provided by the run widget in your IDE's toolbar. You can also use these commands and options:
+## Supported Platforms
 
-- Android app: `./gradlew :androidApp:assembleDebug`
-- Desktop app:
-  - Hot reload: `./gradlew :desktopApp:hotRun --auto`
-  - Standard run: `./gradlew :desktopApp:run`
-
-### Running tests
-
-Use the run button in your IDE's editor gutter, or run tests using Gradle tasks:
-
-- Android tests: `./gradlew :shared:testAndroidHostTest`
-- Desktop tests: `./gradlew :shared:jvmTest`
-
----
-
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…
+| Platform       | Status    |
+|----------------|-----------|
+| Android        | Supported |
+| Desktop (JVM)  | Supported |
+| IOS            | Not yet   |
