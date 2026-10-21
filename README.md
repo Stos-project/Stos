@@ -17,9 +17,9 @@ you solve your programming problems using **StackExchange** and **StackOverflow*
 | ------------------------------------------------   | -------------------------------------------         |
 | ![Detail](screenshots/android/question_detail.png) | ![Search List](screenshots/android/search_list.png) |
 
-| User                                               |
-| ------------------------------------------------   |
-| ![User](screenshots/android/user.png)              |
+| User                                  | Sites                                   |
+|---------------------------------------|-----------------------------------------|
+| ![User](screenshots/android/user.png) | ![Sites](screenshots/android/sites.png) |
 
 ## Supported Platforms
 
