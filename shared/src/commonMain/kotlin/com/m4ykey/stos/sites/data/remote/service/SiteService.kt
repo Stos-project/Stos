@@ -20,7 +20,7 @@ class SiteService(private val client : HttpClient) : RemoteSiteService {
                 appendPathSegments("sites")
                 parameter("filter", filter)
                 parameter("page", page)
-                parameter("page_size", pageSize)
+                parameter("pagesize", pageSize)
             }
         }.body()
     }

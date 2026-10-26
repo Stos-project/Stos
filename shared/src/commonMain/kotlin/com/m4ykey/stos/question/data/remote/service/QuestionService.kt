@@ -94,16 +94,8 @@ class QuestionService(private val client : HttpClient) : RemoteQuestionService {
         site: String
     ): Items<QuestionCommentsDto> {
         return client.get {
-            url {
-                appendPathSegments("questions/$id/comments")
-                parameter("page",page)
-                parameter("page_size",pageSize)
-                parameter("order",order)
-                parameter("sort",sort)
-                parameter("id",id)
-                parameter("filter",filter)
-                parameter("site",site)
-            }
+            url { appendPathSegments("questions/$id/comments") }
+            pagedParameters(page, pageSize, filter, order, sort)
         }.body()
     }
 }

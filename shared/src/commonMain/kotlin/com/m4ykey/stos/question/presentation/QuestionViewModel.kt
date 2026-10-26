@@ -106,8 +106,10 @@ class QuestionViewModel(
         }
         .cachedIn(viewModelScope)
 
-    private val questionCommentsFlow : Flow<PagingData<QuestionComments>> = commentsId
-        .filterNotNull()
+    private val questionCommentsFlow : Flow<PagingData<QuestionComments>> = combine(
+        commentsId.filterNotNull(),
+        site
+    ) { id, _ -> id }
         .distinctUntilChanged()
         .flatMapLatest { id ->
             repository.getQuestionComments(id)
