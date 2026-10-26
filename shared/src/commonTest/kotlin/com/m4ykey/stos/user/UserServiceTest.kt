@@ -3,49 +3,19 @@ package com.m4ykey.stos.user
 import com.m4ykey.stos.core.Filters.QUESTION_HOME_FILTER
 import com.m4ykey.stos.core.Filters.USER_ANSWER_FILTER
 import com.m4ykey.stos.core.Filters.USER_FILTER
+import com.m4ykey.stos.createClient
+import com.m4ykey.stos.jsonHeaders
 import com.m4ykey.stos.question.domain.model.QuestionSort
+import com.m4ykey.stos.responseJson
 import com.m4ykey.stos.user.data.remote.service.UserService
-import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
-import io.ktor.http.headersOf
-import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.test.runTest
-import kotlinx.serialization.json.Json
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
 
 class UserServiceTest {
-
-    private val responseJson = """
-        {
-            "items": [],
-            "has_more": false
-        }
-    """.trimIndent()
-
-    private fun createClient(
-        engine : MockEngine
-    ) : HttpClient {
-        return HttpClient(engine) {
-            install(ContentNegotiation) {
-                json(
-                    Json {
-                        ignoreUnknownKeys = true
-                    }
-                )
-            }
-        }
-    }
-
-    private fun jsonHeaders() = headersOf(
-        HttpHeaders.ContentType,
-        "application/json"
-    )
 
     @Test
     fun `getUserById sends correct endpoint and parameters`() = runTest {
