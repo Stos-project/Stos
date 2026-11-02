@@ -26,6 +26,7 @@ markdown = "0.46.0"
 ksoup = "0.6.0"
 browser = "1.10.0"
 slf4j = "2.0.20"
+latex = "1.6.3"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -86,6 +87,11 @@ ksoup = { module = "com.mohamedrejeb.ksoup:ksoup-html", version.ref = "ksoup" }
 ksoup-entities = { module = "com.mohamedrejeb.ksoup:ksoup-entities", version.ref = "ksoup" }
 
 slf4j = { module = "org.slf4j:slf4j-simple", version.ref = "slf4j" }
+
+latex-base = { module = "io.github.huarangmeng:latex-base", version.ref = "latex" }
+latex-parser = { module = "io.github.huarangmeng:latex-parser", version.ref = "latex" }
+latex-renderer = { module = "io.github.huarangmeng:latex-renderer", version.ref = "latex" }
+latex-fonts-katex = { module = "io.github.huarangmeng:latex-fonts-katex", version.ref = "latex" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

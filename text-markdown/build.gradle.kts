@@ -32,6 +32,11 @@ kotlin {
             implementation(libs.compose.material3)
             implementation(libs.compose.ui)
             implementation(libs.compose.runtime)
+
+            implementation(libs.latex.renderer)
+            implementation(libs.latex.parser)
+            implementation(libs.latex.base)
+            implementation(libs.latex.fonts.katex)
         }
     }
 }

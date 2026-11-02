@@ -4,6 +4,34 @@ import com.mohamedrejeb.ksoup.entities.KsoupEntities
 import com.mohamedrejeb.ksoup.html.parser.KsoupHtmlHandler
 import com.mohamedrejeb.ksoup.html.parser.KsoupHtmlParser
 
+private val mathRegex = Regex(
+    """(```[\s\S]*?```|`[^`\n]+`|(?m)^(?: {4}|\t).*$)""" +
+            """|\$\$([\s\S]+?)\$\$""" +
+            """|(?<!\\)\\\[([\s\S]+?)\\]""" +
+            """|(\\begin\{(align\*?|aligned|gather\*?|equation\*?|cases|[pbvBV]?matrix)\}[\s\S]+?\\end\{\5\})"""
+)
+
+fun String.splitMath() : List<Segment> {
+    val result = mutableListOf<Segment>()
+    var textStart = 0
+
+    mathRegex.findAll(this).forEach { match ->
+        if (match.groups[1] != null) return@forEach
+
+        val before = substring(textStart, match.range.first)
+        if (before.isNotBlank()) result += Segment.Markdown(before)
+
+        val latex = (match.groups[2]?.value ?: match.groups[3]?.value).orEmpty().trim()
+        if (latex.isNotEmpty()) result += Segment.Math(latex)
+
+        textStart = match.range.last + 1
+    }
+
+    val rest = substring(textStart)
+    if (rest.isNotBlank()) result += Segment.Markdown(rest)
+    return result
+}
+
 fun String.decodeAndCleanHtml() : String {
     val result = StringBuilder()
 
