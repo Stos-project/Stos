@@ -1,0 +1,93 @@
+package com.m4ykey.stos.site
+
+import androidx.paging.PagingSource
+import com.m4ykey.stos.core.network.ApiException
+import com.m4ykey.stos.sites.data.remote.paging.SitePagingSource
+import kotlinx.coroutines.test.runTest
+import org.junit.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertIs
+import kotlin.test.assertNull
+
+class SitePagingSourceTest {
+
+    @Test
+    fun `load returns next key when more pages exist`() = runTest {
+        val service = FakeRemoteSiteServicePaging(siteHasMore = true)
+
+        val source = SitePagingSource(
+            service = service
+        )
+
+        val result = source.load(
+            PagingSource.LoadParams.Refresh(
+                key = null,
+                loadSize = 20,
+                placeholdersEnabled = false
+            )
+        )
+
+        assertIs<PagingSource.LoadResult.Page<Int, *>>(result)
+        assertEquals(2, (result as PagingSource.LoadResult.Page).nextKey)
+        assertNull(result.prevKey)
+        assertEquals(1, service.sitePage)
+        assertEquals(20, service.sitePageSize)
+    }
+
+    @Test
+    fun `load returns null next key when no more pages exist`() = runTest {
+        val service = FakeRemoteSiteServicePaging(siteHasMore = false)
+
+        val source = SitePagingSource(service)
+
+        val result = source.load(
+            PagingSource.LoadParams.Refresh(
+                key = 1,
+                loadSize = 10,
+                placeholdersEnabled = false
+            )
+        )
+
+        assertIs<PagingSource.LoadResult.Page<Int, *>>(result)
+        assertNull((result as PagingSource.LoadResult.Page).nextKey)
+    }
+
+    @Test
+    fun `load increments page key`() = runTest {
+        val service = FakeRemoteSiteServicePaging(siteHasMore = true)
+        val source = SitePagingSource(service)
+
+        val result = source.load(
+            PagingSource.LoadParams.Refresh(
+                key = 3,
+                loadSize = 10,
+                placeholdersEnabled = false
+            )
+        )
+
+        assertIs<PagingSource.LoadResult.Page<Int, *>>(result)
+        assertEquals(4, (result as PagingSource.LoadResult.Page).nextKey)
+        assertEquals(3, service.sitePage)
+        assertEquals(2, result.prevKey)
+    }
+
+    @Test
+    fun `load returns error when service fails`() = runTest {
+        val service = FakeRemoteSiteServicePaging(siteError = IllegalStateException("Network error"))
+
+        val source = SitePagingSource(service)
+
+        val result = source.load(
+            PagingSource.LoadParams.Refresh(
+                key = null,
+                placeholdersEnabled = false,
+                loadSize = 10
+            )
+        )
+
+        val error = assertIs<PagingSource.LoadResult.Error<Int, *>>(result)
+
+        assertIs<ApiException.UnknownError>(error.throwable)
+        assertEquals("Network error", result.throwable.cause?.message)
+    }
+}
