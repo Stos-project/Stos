@@ -54,18 +54,19 @@ fun TextMarkdown(
         text
             .decodeAndCleanHtml()
             .fixImageReferences()
-            .normalizeMarkdown()
     }
 
-    val segments = remember(processedText) { processedText.splitMath() }
+    val segments = remember(processedText) { processedText.toSegments() }
 
     val latexConfig = remember(fontSize, color) {
         val colors = LatexThemeColors(color = color, backgroundColor = Color.Transparent)
         LatexConfig(
-            fontSize = fontSize * 1.1f,
+            fontSize = fontSize,
             theme = LatexTheme.auto(light = colors, dark = colors)
         )
     }
+
+    val blockConfig = remember(latexConfig, fontSize) { latexConfig.copy(fontSize = fontSize * 1.15f) }
 
     val customComponents = remember(isDarkTheme) {
         markdownComponents(
@@ -127,7 +128,7 @@ fun TextMarkdown(
                         when (segment) {
                             is Segment.Markdown -> {
                                 val markdownState = rememberMarkdownState(
-                                    content = segment.value,
+                                    content = segment.value.normalizeMarkdown(),
                                     retainState = false
                                 )
                                 Markdown(
@@ -138,17 +139,25 @@ fun TextMarkdown(
                                     typography = customTypography
                                 )
                             }
-                            is Segment.Math -> {
-                                Box(
+                            is Segment.Paragraph -> {
+                                InlineMathParagraph(
+                                    parts = segment.parts,
+                                    config = latexConfig,
+                                    fontSize = fontSize,
+                                    fontWeight = fontWeight,
+                                    color = color,
+                                    textAlign = textAlign
+                                )
+                            }
+                            is Segment.Block -> Box(
+                                modifier = Modifier.fillMaxWidth(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                LatexAutoWrap(
+                                    latex = segment.latex,
                                     modifier = Modifier.fillMaxWidth(),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    LatexAutoWrap(
-                                        latex = segment.latex,
-                                        modifier = Modifier.fillMaxWidth(),
-                                        config = latexConfig
-                                    )
-                                }
+                                    config = blockConfig
+                                )
                             }
                         }
                     }

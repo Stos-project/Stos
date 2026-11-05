@@ -4,31 +4,84 @@ import com.mohamedrejeb.ksoup.entities.KsoupEntities
 import com.mohamedrejeb.ksoup.html.parser.KsoupHtmlHandler
 import com.mohamedrejeb.ksoup.html.parser.KsoupHtmlParser
 
-private val mathRegex = Regex(
+private val blockRegex = Regex(
     """(```[\s\S]*?```|`[^`\n]+`|(?m)^(?: {4}|\t).*$)""" +
-            """|\$\$([\s\S]+?)\$\$""" +
-            """|(?<!\\)\\\[([\s\S]+?)\\]""" +
-            """|(\\begin\{(align\*?|aligned|gather\*?|equation\*?|cases|[pbvBV]?matrix)\}[\s\S]+?\\end\{\5\})"""
+            """|\$\$([\s\S]+?)\$\$|(?<!\\)\\\[([\s\S]+?)\\]"""
 )
 
-fun String.splitMath() : List<Segment> {
+private val inlineRegex = Regex(
+    """(?<![\\$])\$(?![\s$])((?:\\.|[^$\\])+?)(?<![\s\\])\$(?!\d)|\\\((.+?)\\\)"""
+)
+
+private val tagLabelRegex = Regex("""\\tag\*?\{([^}]*)\}\s*\\label\{([^}]*)\}""")
+private val eqrefRegex = Regex("""\\eqref\{([^}]*)\}""")
+private val labelRegex = Regex("""\\label\{[^}]*\}""")
+
+fun String.fixRefs(labels : Map<String, String>) : String =
+    replace(eqrefRegex) { "\\text{(${labels[it.groupValues[1]] ?: "?"})}" }
+        .replace(labelRegex, "")
+
+fun String.toParagraphs() : List<String> {
+    val result = mutableListOf<String>()
+    val current = StringBuilder()
+    var inFence = false
+    fun flush() {
+        if (current.isNotBlank()) result += current.toString().trimEnd()
+        current.clear()
+    }
+    lines().forEach { line ->
+        if (line.trimStart().startsWith("```")) inFence = !inFence
+        if (line.isBlank() && !inFence) flush() else current.appendLine(line)
+    }
+    flush()
+    return result
+}
+
+fun String.splitInline() : List<Part> {
+    val parts = mutableListOf<Part>()
+    var last = 0
+    inlineRegex.findAll(this).forEach { m ->
+        if (m.range.first > last) parts += Part.Text(substring(last, m.range.first))
+        parts += Part.Math((m.groups[1]?.value ?: m.groups[2]?.value).orEmpty().trim())
+        last = m.range.last + 1
+    }
+    if (last < length) parts += Part.Text(substring(last))
+    return parts
+}
+
+fun String.toSegments() : List<Segment> {
+    val labels = tagLabelRegex.findAll(this)
+        .associate { it.groupValues[2] to it.groupValues[1] }
     val result = mutableListOf<Segment>()
-    var textStart = 0
 
-    mathRegex.findAll(this).forEach { match ->
-        if (match.groups[1] != null) return@forEach
-
-        val before = substring(textStart, match.range.first)
-        if (before.isNotBlank()) result += Segment.Markdown(before)
-
-        val latex = (match.groups[2]?.value ?: match.groups[3]?.value).orEmpty().trim()
-        if (latex.isNotEmpty()) result += Segment.Math(latex)
-
-        textStart = match.range.last + 1
+    fun addMarkdown(text : String) {
+        text.toParagraphs().forEach { p ->
+            val isCode = p.contains("```") || p.startsWith("    ") || p.startsWith("\t")
+            if (!isCode && inlineRegex.containsMatchIn(p)) {
+                val flat = p.replace(Regex("""\s*\n\s*"""), " ")
+                result += Segment.Paragraph(
+                    flat.splitInline().map {
+                        if (it is Part.Math) Part.Math(it.latex.fixRefs(labels)) else it
+                    }
+                )
+            } else {
+                val prev = result.lastOrNull()
+                if (prev is Segment.Markdown) {
+                    result[result.lastIndex] = Segment.Markdown(prev.value + "\n\n" + p)
+                } else result += Segment.Markdown(p)
+            }
+        }
     }
 
-    val rest = substring(textStart)
-    if (rest.isNotBlank()) result += Segment.Markdown(rest)
+    var textStart = 0
+    blockRegex.findAll(this).forEach { m ->
+        if (m.groups[1] != null) return@forEach
+        addMarkdown(substring(textStart, m.range.first))
+        val latex = (m.groups[2]?.value ?: m.groups[3]?.value).orEmpty().trim()
+        if (latex.isNotEmpty()) result += Segment.Block(latex.fixRefs(labels))
+        textStart = m.range.last + 1
+    }
+    addMarkdown(substring(textStart))
     return result
 }
 
