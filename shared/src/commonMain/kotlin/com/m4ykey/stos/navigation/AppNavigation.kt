@@ -87,6 +87,9 @@ fun AppNavigation(modifier : Modifier = Modifier) {
                     },
                     onSiteClick = {
                         navigateTo(Route.Sites)
+                    },
+                    onSettingsClick = {
+
                     }
                 )
             }
