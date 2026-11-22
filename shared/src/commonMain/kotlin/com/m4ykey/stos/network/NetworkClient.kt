@@ -1,12 +1,16 @@
 package com.m4ykey.stos.network
 
+import com.m4ykey.stos.core.network.BackoffException
+import com.m4ykey.stos.core.network.BackoffGate
 import com.m4ykey.stos.shared.BuildKonfig
 import com.m4ykey.stos.sites.data.helpers.SiteManager
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.HttpRequestRetry
+import io.ktor.client.plugins.HttpResponseValidator
 import io.ktor.client.plugins.HttpTimeout
+import io.ktor.client.plugins.ResponseException
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.DEFAULT
@@ -18,6 +22,7 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.URLProtocol
 import io.ktor.client.plugins.compression.ContentEncoding
+import io.ktor.client.statement.bodyAsText
 import io.ktor.http.contentType
 import io.ktor.http.path
 import io.ktor.serialization.kotlinx.json.json
@@ -28,6 +33,7 @@ object NetworkClient {
     private const val BASE_URL = "api.stackexchange.com"
     private const val API_VERSION = "2.3"
     private const val TIMEOUT = 15_000L
+    private val BACKOFF_REGEX = Regex("\"backoff\"\\s*:\\s*(\\d+)")
 
     fun create(
         enableLogging : Boolean = false,
@@ -77,6 +83,12 @@ object NetworkClient {
 
         install("SiteHeaderPlugin") {
             requestPipeline.intercept(HttpRequestPipeline.Before) {
+                val waiting = BackoffGate.remainingSeconds()
+
+                if (waiting > 0) {
+                    throw BackoffException(waiting)
+                }
+
                 val url = context.url
 
                 if (!url.parameters.contains("key")) {
@@ -100,6 +112,22 @@ object NetworkClient {
             requestTimeoutMillis = TIMEOUT
             socketTimeoutMillis = TIMEOUT
             connectTimeoutMillis = TIMEOUT
+        }
+
+        HttpResponseValidator {
+            handleResponseExceptionWithRequest { cause, _ ->
+                val body = (cause as? ResponseException)
+                    ?.let { exception -> runCatching { exception.response.bodyAsText() }.getOrNull() }
+                    ?: cause.message.orEmpty()
+
+                BACKOFF_REGEX.find(body)
+                    ?.groupValues
+                    ?.get(1)
+                    ?.toIntOrNull()
+                    ?.let { seconds -> BackoffGate.blockFor(seconds) }
+
+                throw cause
+            }
         }
     }
 

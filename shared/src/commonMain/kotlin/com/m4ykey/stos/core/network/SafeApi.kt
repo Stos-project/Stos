@@ -14,6 +14,8 @@ suspend inline fun <T> safeApi(crossinline api : suspend () -> T) : ApiResult<T>
         ApiResult.Failure(ApiException.NoConnection())
     } catch (e : CancellationException) {
         throw e
+    } catch (e : BackoffException) {
+        ApiResult.Failure(ApiException.Throttled(e.retryAfterSeconds))
     } catch (e : Exception) {
         ApiResult.Failure(ApiException.UnknownError(cause = e))
     }

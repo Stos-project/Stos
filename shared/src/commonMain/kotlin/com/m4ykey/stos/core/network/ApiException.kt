@@ -32,6 +32,11 @@ sealed class ApiException(
         error : String = "Too many requests"
     ) : ApiException(error, 429)
 
+    class Throttled(
+        val retryAfterSeconds : Long,
+        error : String = "Too many requests. Try again in $retryAfterSeconds s."
+    ) : ApiException(error, 429)
+
     class Unauthorized(
         error : String = "Unauthorized"
     ) : ApiException(error, 401)
