@@ -26,6 +26,10 @@ dependencies {
     implementation(libs.slf4j)
 }
 
+kotlin {
+    jvmToolchain(21)
+}
+
 compose.desktop {
     application {
         mainClass = "com.m4ykey.stos.MainKt"
