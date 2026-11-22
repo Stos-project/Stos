@@ -119,7 +119,7 @@ fun SiteContent(
                                 viewModel.selectSite(site)
                                 onBack()
                             },
-                            isSelected = site.apiSiteParameter == currentSelected
+                            isSelected = site.apiSiteParameter == currentSelected.apiSiteParameter
                         )
                     }
                 }

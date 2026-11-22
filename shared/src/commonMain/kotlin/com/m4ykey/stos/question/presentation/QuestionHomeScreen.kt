@@ -78,6 +78,8 @@ fun QuestionHomeScreen(
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
 
+    val siteName by viewModel.siteName.collectAsStateWithLifecycle()
+
     val showScrollByPosition by remember {
         derivedStateOf {
             listState.firstVisibleItemIndex > 20
@@ -166,7 +168,8 @@ fun QuestionHomeScreen(
                         }
                     }
                 )
-            }
+            },
+            title = siteName
         )
     }
 }

@@ -86,7 +86,7 @@ object NetworkClient {
                 val isSitesRequest = url.pathSegments.contains("sites")
 
                 if (!isSitesRequest && !url.parameters.contains("site")) {
-                    url.parameters.append("site", siteManager.selectedSite.value)
+                    url.parameters.append("site", siteManager.selectedSite.value.apiSiteParameter)
                 }
             }
         }
