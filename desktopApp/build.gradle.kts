@@ -42,6 +42,8 @@ compose.desktop {
             description = "Unofficial StackExchange client"
             copyright = "2026 m4ykey"
 
+            modules("java.sql", "java.net.http", "jdk.unsupported", "jdk.crypto.ec", "java.naming", "java.management")
+
             windows {
                 menuGroup = "Stos"
                 shortcut = true
