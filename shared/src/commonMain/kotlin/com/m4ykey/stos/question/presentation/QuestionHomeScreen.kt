@@ -59,9 +59,11 @@ import org.koin.compose.viewmodel.koinViewModel
 import stos.shared.generated.resources.Res
 import stos.shared.generated.resources.ic_menu
 import stos.shared.generated.resources.ic_search
+import stos.shared.generated.resources.ic_settings
 import stos.shared.generated.resources.ic_site
 import stos.shared.generated.resources.menu
 import stos.shared.generated.resources.search
+import stos.shared.generated.resources.settings
 import stos.shared.generated.resources.site
 
 @Composable
@@ -71,7 +73,8 @@ fun QuestionHomeScreen(
     viewModel: QuestionViewModel = koinViewModel(),
     onQuestionClick: (Int) -> Unit,
     onOwnerClick: (Int) -> Unit,
-    onSiteClick : () -> Unit
+    onSiteClick : () -> Unit,
+    onSettingsClick : () -> Unit
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
@@ -86,15 +89,18 @@ fun QuestionHomeScreen(
         }
     }
 
-    val items = remember {
-        listOf(
-            DrawerItem(
-                onClick = { onSiteClick() },
-                title = Res.string.site,
-                icon = Res.drawable.ic_site
-            )
+    val items = listOf(
+        DrawerItem(
+            onClick = { onSiteClick() },
+            title = Res.string.site,
+            icon = Res.drawable.ic_site
+        ),
+        DrawerItem(
+            onClick = { onSettingsClick() },
+            title = Res.string.settings,
+            icon = Res.drawable.ic_settings
         )
-    }
+    )
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 

@@ -50,7 +50,7 @@ class SiteViewModelTest {
         Dispatchers.setMain(StandardTestDispatcher(testScheduler))
         createViewModel()
 
-        assertEquals("stackoverflow", viewModel.selectedSite.value)
+        assertEquals("stackoverflow", viewModel.selectedSite.value.apiSiteParameter)
     }
 
     @Test
@@ -60,7 +60,7 @@ class SiteViewModelTest {
 
         viewModel.selectSite(sitesItem)
 
-        assertEquals("serverfault", viewModel.selectedSite.value)
+        assertEquals("serverfault", viewModel.selectedSite.value.apiSiteParameter)
     }
 
     @Test
