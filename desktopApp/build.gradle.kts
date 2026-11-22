@@ -36,7 +36,7 @@ compose.desktop {
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "com.m4ykey.stos"
+            packageName = "stos"
             packageVersion = "$versionMajor.$versionMinor.$versionPatch"
             vendor = "m4ykey"
             description = "Unofficial StackExchange client"
