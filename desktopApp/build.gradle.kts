@@ -34,6 +34,18 @@ compose.desktop {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "com.m4ykey.stos"
             packageVersion = "$versionMajor.$versionMinor.$versionPatch"
+            vendor = "m4ykey"
+            description = "Unofficial StackExchange client"
+            copyright = "2026 m4ykey"
+
+            windows {
+                menuGroup = "Stos"
+                shortcut = true
+                perUserInstall = true
+                dirChooser = true
+                iconFile.set(project.file("icons/stos.ico"))
+                upgradeUuid = "68f80ac2-8160-4405-84cf-ddabc6603ffc"
+            }
         }
     }
 }
